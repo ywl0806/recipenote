@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/config :: configFragment">
+    <meta charset="UTF-8">
+    <title>Recipe Note</title>
+</head>
+<body>
+    <header layout:replace="~{fragments/header :: headerFragment}"></header>
+
+    <div layout:fragment="content"></div>
+
+    <footer layout:replace="~{fragments/footer :: footerFragment}"></footer>
+
+</body>
+</html>
