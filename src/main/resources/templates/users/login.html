@@ -10,10 +10,11 @@
     <div layout:fragment="content">
         <div class="container">
             <form class="login_user" th:action="@{/login}" method="post" >
-                <label for="login_email" class="form-label">Email</label>
-                <input type="email" id="login_email" name="email">
-                <label for="login_password" class="form-label">Password</label>
-                <input type="password" id="login_password" name="password">
+                <label for="session_email" class="form-label">Email</label>
+                <input type="email" name="username" id="session_email">
+                <label for="session_password" class="form-label">Password</label>
+                <input type="password" name="password" id="session_password">
+                <input type="submit" value="submit">
             </form>
         </div>
     </div>

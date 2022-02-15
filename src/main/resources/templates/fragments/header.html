@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html
+        xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head  >
@@ -9,7 +10,10 @@
 <header layout:fragment="headerFragment">
     <nav>
         <div class="container">
-            <a class="navbar-logo" th:href="@{/}">이곳에 로고가 들어갑니다.</a>
+            <a class="navbar-logo" th:href="@{/}">HOME</a>
+            <a class="navbar-item" th:href="@{/login}">LOGIN</a>
+            <a class="navbar-item" th:href="@{/join}">JOIN</a>
+            <a class="navbar-item" th:href="@{/logout}" data-method="post">LOGOUT</a>
         </div>
     </nav>
 </header>
