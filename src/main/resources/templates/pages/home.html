@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        layout:decorate="~{layouts/layout}"
+
+>
 <head>
     <meta charset="UTF-8">
     <title>Recipe Note</title>
+    <th:block layout:fragment="script">
+    </th:block>
 </head>
 <body>
 <div layout:fragment="content">
+    <div sec:authorize="isAuthenticated()">
+        <span sec:authentication="principal.name"></span>
+    </div>
     <h1 th:text="${message}">Hello world!</h1>
-
 </div>
 </body>
 </html>

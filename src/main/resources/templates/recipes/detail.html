@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+    <h1 th:text="${recipe.name}"></h1>
+      <div id="content">
+      </div>
+   </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+         var str = /*[[${recipe.content}]]*/;
+        document.getElementById('content').innerHTML=str;
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

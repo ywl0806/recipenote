@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <th:block layout:fragment="script">
+        <script src="ckeditor5-32.0.0/build/ckeditor.js"></script>
+    </th:block>
+    <th:block layout:fragment="css">
+        <style>
+            .ck-editor__editable{
+                min-height: 300px
+               }
+        </style>
+    </th:block>
+    <meta charset="UTF-8">
+    <title>Recipe</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <form th:action="@{/create-recipe}" th:object="${form}" method="post">
+                <label for="recipe_name">Title</label>
+                <input type="text" id="recipe_name" th:field="*{name}" >
+                <textarea id="editor" th:field="*{content}">
+                </textarea>
+                <input type="submit" value="submit">
+            </form>
+        </div>
+        <script>
+            ClassicEditor
+                .create( document.querySelector( '#editor' ) )
+                .catch( error => {
+                    console.error( error );
+                } );
+        </script>
+    </div>
+</body>
+</html>

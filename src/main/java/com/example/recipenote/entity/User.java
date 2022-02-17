@@ -1,6 +1,7 @@
 package com.example.recipenote.entity;
 
 import com.example.recipenote.entity.role.UserRole;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,8 +17,9 @@ import java.util.List;
 @Data
 @Table(name = "user")
 @NoArgsConstructor
-public class User extends AbstractEntity implements UserDetails {
+public class User extends AbstractEntity implements UserDetails ,UserInf{
 
+    @Builder
     public User(String username, String name, String password, UserRole role) {
         this.username = username;
         this.name = name;
@@ -26,7 +28,7 @@ public class User extends AbstractEntity implements UserDetails {
     }
 
     @Id
-    @SequenceGenerator(name = "user_id")
+    @SequenceGenerator(name = "user_id_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
@@ -39,8 +41,16 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column
+    private Long affiliateId;
+
     @Column(nullable = false)
     private  Boolean enabled = true;
+
+    @OneToOne
+    @JoinColumn(name = "affiliateId",insertable = false, updatable = false)
+    private Affiliate affiliate;
+
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -49,7 +59,7 @@ public class User extends AbstractEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(authorities.toString()));
+        authorities.add(new SimpleGrantedAuthority(role.toString()));
         return authorities;
     }
 
