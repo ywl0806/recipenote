@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/layout}">
 
 <head>
@@ -12,29 +13,43 @@
             .ck-editor__editable{
                 min-height: 300px
                }
+
         </style>
     </th:block>
     <meta charset="UTF-8">
     <title>Recipe</title>
 </head>
 <body>
-    <div layout:fragment="content">
-        <div class="container">
-            <form th:action="@{/create-recipe}" th:object="${form}" method="post">
-                <label for="recipe_name">Title</label>
-                <input type="text" id="recipe_name" th:field="*{name}" >
-                <textarea id="editor" th:field="*{content}">
+<div layout:fragment="content">
+    <div class="container">
+        <form th:action="@{/create-recipe}" th:object="${form}" method="post">
+            <label for="recipe_name">Title</label>
+            <th:block sec:authorize="hasRole('ROLE_USER')">
+                <ul>
+                    <li><label for="is_true">public</label>
+                        <input type="radio" value="true" id="is_true" th:field="*{isPublic}"></li>
+                    <li><label for="is_false">not public</label>
+                        <input type="radio" value="false" id="is_false" th:field="*{isPublic}"></li>
+                </ul>
+                <ul th:each="store : ${storeList}">
+                    <li><label for="${store.id}" th:text="${store.name}"></label>
+                        <input type="radio" th:value="${store.id}" id="${store.id}" th:field="*{storeId}" checked="checked"></li>
+                </ul>
+            </th:block>
+            <input type="text" id="recipe_name" th:field="*{name}">
+            <textarea id="editor" th:field="*{content}">
                 </textarea>
-                <input type="submit" value="submit">
-            </form>
-        </div>
-        <script>
+            <input type="submit" value="submit">
+        </form>
+    </div>
+    <script>
             ClassicEditor
                 .create( document.querySelector( '#editor' ) )
                 .catch( error => {
                     console.error( error );
                 } );
-        </script>
-    </div>
+
+    </script>
+</div>
 </body>
 </html>

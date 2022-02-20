@@ -18,6 +18,9 @@
         <span sec:authentication="principal.name"></span>
     </div>
     <h1 th:text="${message}">Hello world!</h1>
+    <div th:if = "${affiliateId != null}">
+        <a th:href="@{/affiliate/{affiliateId}(affiliateId=${affiliateId})}"> 회사 </a>
+    </div>
 </div>
 </body>
 </html>

@@ -9,9 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -20,11 +18,10 @@ import java.util.List;
 public class User extends AbstractEntity implements UserDetails ,UserInf{
 
     @Builder
-    public User(String username, String name, String password, UserRole role) {
+    public User(String username, String name, String password) {
         this.username = username;
         this.name = name;
         this.password = password;
-        this.role = role;
     }
 
     @Id
@@ -52,14 +49,25 @@ public class User extends AbstractEntity implements UserDetails ,UserInf{
     private Affiliate affiliate;
 
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role>roles = new HashSet<>();
+
+    public void addRole(Role role){
+       this.roles.add(role);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.toString()));
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+
         return authorities;
     }
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        layout:decorate="~{layouts/layout}"
+>
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>CREATE STORE</h1>
+    <div class="container">
+        <form th:object="${store}" th:action="@{new-store}" method="post">
+            <label for="name">Store Name</label>
+            <input type="text" id="name" th:field="*{name}">
+            <label for="description">Description</label>
+            <input type="text" id="description" th:field="*{description}" placeholder="店舗を紹介してください。">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</div>
+</body>
+</html>

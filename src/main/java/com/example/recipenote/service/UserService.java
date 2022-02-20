@@ -1,8 +1,9 @@
 package com.example.recipenote.service;
 
+import com.example.recipenote.entity.Role;
 import com.example.recipenote.entity.User;
-import com.example.recipenote.entity.role.UserRole;
 import com.example.recipenote.form.UserForm;
+import com.example.recipenote.repository.RoleRepository;
 import com.example.recipenote.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,11 +16,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
+    private final RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-
+        this.roleRepository = roleRepository;
     }
 
     public void join(UserForm userForm){
@@ -35,7 +39,9 @@ public class UserService {
         if (userRepository.findByUsername(email) != null) {
             throw new IllegalStateException("ユーザーが存在します。");
         }
-        User newUser = new User(email,name,passwordEncoder.encode(password), UserRole.ROLE_USER);
+        User newUser = new User(email,name,passwordEncoder.encode(password));
+        Role role = roleRepository.findByName("ROLE_GUEST");
+        newUser.addRole(role);
         userRepository.save(newUser);
     }
 

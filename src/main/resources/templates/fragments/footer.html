@@ -10,9 +10,14 @@
         <nav>
             <div class = "container">
                 <hr>
-                <p>이곳은 footer입니다.</p>
+                <span id="footer__text"></span>
+                <span>  &copy;</span>
             </div>
         </nav>
+        <script>
+            var footerText = document.getElementById("footer__text");
+            footerText.innerText =   "recipe note  " + new Date().getFullYear();
+        </script>
     </footer>
 </body>
 </html>

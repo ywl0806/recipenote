@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -33,6 +35,8 @@ public class Recipe extends AbstractEntity {
     @Column(nullable = false)
     private Long userId;
 
+    @Column(nullable = false)
+    private Boolean isPublic;
 
     @OneToOne
     @JoinColumn(name = "affiliateId", insertable = false, updatable = false)
@@ -54,5 +58,9 @@ public class Recipe extends AbstractEntity {
     @JoinTable(name = "RECIPE_INGREDIENT",
             joinColumns = @JoinColumn(name = "RECIPE_ID"),
             inverseJoinColumns = @JoinColumn(name = "INGREDIENT_ID"))
-    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
+    private Set<Ingredient> ingredients = new HashSet<>();
+
+    public void addIngredient(Ingredient ingredient){
+        this.ingredients.add(ingredient);
+    }
 }

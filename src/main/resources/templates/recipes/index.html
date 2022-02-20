@@ -5,17 +5,10 @@
       layout:decorate="~{layouts/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
     <div layout:fragment="content">
-        <div th:each = "recipe : ${list}">
-            <div class="container">
-                <a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
-                    <h3 class="title" th:text="${recipe.name}"></h3>
-                </a>
-            </div>
-        </div>
+        <div th:replace="~{fragments/recipeList :: recipeList}"></div>
     </div>
 </body>
 </html>

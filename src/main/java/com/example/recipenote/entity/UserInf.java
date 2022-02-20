@@ -4,4 +4,8 @@ public interface UserInf {
     Long getUserId();
 
     String getUsername();
+
+    Long getAffiliateId();
+
+    String getName();
 }

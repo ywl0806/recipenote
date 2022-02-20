@@ -3,6 +3,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    generate-ddl: true
+
   h2:
     console:
       enabled: true
@@ -10,3 +12,4 @@ spring:
     url: jdbc:h2:file:~/recipenote/testDB;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
+    initialization-mode: always

@@ -18,20 +18,24 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private FormAuthenticationProvider authenticationProvider;
+    @Autowired
+    private FormAuthenticationProvider authenticationProvider;
 
     @Autowired
     private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
+    private final AuthorizationDynamicHandler authorizationDynamicHandler;
+
+    @Autowired
     private DataSource dataSource;
 
 
-    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**"};
+    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**","https://kit.fontawesome.com/**"};
 
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthorizationDynamicHandler authorizationDynamicHandler) {
         this.userDetailsService = userDetailsService;
+        this.authorizationDynamicHandler = authorizationDynamicHandler;
     }
 
     @Override
@@ -43,7 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/login","/join").permitAll()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/login","/join").anonymous()
+                    .antMatchers("/affiliate/{affiliateId}/**").access("@authorizationDynamicHandler.checkAffiliateId(authentication,#affiliateId)")
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -57,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     //.permitAll();
     }
 
+
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.authenticationProvider(authenticationProvider);
@@ -67,8 +74,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.authenticationProvider(authenticationProvider);
     }
 }

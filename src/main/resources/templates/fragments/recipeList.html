@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="topics-index-wrapper" th:fragment="recipeList">
+    <h2>Recipe List</h2>
+    <div class="container">
+        <div class="row" th:each="recipe : ${list}">
+            <div class="col-md-2"><a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
+                <h3 class="title" th:text="${recipe.name}"></h3>
+            </a></div>
+            <div class="col-md-2" th:text="${recipe.storeName}"> //</div>
+            <div class="col-md-2" th:text="${recipe.userName}"></div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

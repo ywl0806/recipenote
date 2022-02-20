@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        layout:decorate="~{layouts/layout}"
+>
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+   <h1>CREATE COMPANY</h1>
+    <div class="container">
+        <form th:object="${affiliate}" th:action="@{new-affiliate}" method="post">
+            <label for="name">Company Name</label>
+            <input type="text" id="name" th:field="*{name}">
+            <label for="description">description</label>
+            <input type="text" id="description" th:field="*{description}" placeholder="簡単に会社を紹介してください。">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,23 +1,29 @@
 package com.example.recipenote.service;
 
 import com.example.recipenote.entity.User;
-import com.example.recipenote.entity.role.UserRole;
 import com.example.recipenote.form.UserForm;
 import com.example.recipenote.repository.UserRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserServiceTest {
 
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-   @Test
+    @Autowired
+    private final UserRepository userRepository;
+
+    public UserServiceTest(UserService userService, UserRepository userRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+    }
+
+
+    @Test
     void join() {
+
        UserForm userForm = new UserForm();
        userForm.setEmail("e@e");
        userForm.setName("a");
