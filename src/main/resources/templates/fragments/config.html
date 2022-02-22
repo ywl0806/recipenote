@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head th:fragment="configFragment">
-  <meta charset="UTF-8">
-  <!--  css   -->
-  <!--  共通的なcssを作成　-->
-  <link rel="stylesheet" href="https://unpkg.com/mvp.css">
-  <link rel="stylesheet" href="/css/app.css">
-  <th:block layout:fragment="css"></th:block>
-  <!--  script    -->
-  <!--  共通的なscriptを作成　-->
-  <script src="/scripts/app.js" defer></script>
-  <th:block layout:fragment="script"></th:block>
-</head>
-
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <head th:fragment="configFragment">
+    <meta charset="UTF-8" />
+    <!--  css   -->
+    <!--  共通的なcssを作成　-->
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <th:block layout:fragment="css"></th:block>
+    <!--  script    -->
+    <!--  共通的なscriptを作成　-->
+    <script src="/scripts/app.js" defer></script>
+    <th:block layout:fragment="script"></th:block>
+  </head>
 </html>

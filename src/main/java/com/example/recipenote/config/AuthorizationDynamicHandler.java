@@ -12,8 +12,6 @@ import java.util.Objects;
 public class AuthorizationDynamicHandler {
 
     public boolean checkAffiliateId(Authentication authentication,Long affiliateId ){
-        System.out.println("아이디 : " + affiliateId);
-
         Object principal = authentication.getPrincipal();
 
         if(!(principal instanceof User)){

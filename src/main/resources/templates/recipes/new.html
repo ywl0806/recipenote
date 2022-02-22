@@ -6,7 +6,7 @@
 
 <head>
     <th:block layout:fragment="script">
-        <script src="ckeditor5-32.0.0/build/ckeditor.js"></script>
+        <script th:src="@{ckeditor5-32.0.0/build/ckeditor.js}"></script>
     </th:block>
     <th:block layout:fragment="css">
         <style>
@@ -42,13 +42,18 @@
             <input type="submit" value="submit">
         </form>
     </div>
+    <div id="star"></div>
     <script>
             ClassicEditor
-                .create( document.querySelector( '#editor' ) )
+                .create( document.querySelector( '#editor' ),{
+                    simpleUpload: {
+                        uploadUrl: '/upload/image',
+                        withCredintials: true
+                    }
+                })
                 .catch( error => {
                     console.error( error );
                 } );
-
     </script>
 </div>
 </body>

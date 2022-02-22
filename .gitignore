@@ -33,3 +33,5 @@ build/
 .vscode/
 
 /node_modules
+
+/ckeditor5-32.0.0
