@@ -7,24 +7,32 @@
     <title>Join</title>
 </head>
 <body>
-    <div layout:fragment="content">
-        <div class="form-container">
-            <main>
-                <h1>sign in</h1>
-                <form th:action="@{/join}" th:object="${form}" method="post">
-                    <label class="form-label" for="user_name">name</label>
-                    <input type="text" th:field="*{name}" id="user_name">
-                    <label class="form-label" for="user_email">email</label>
-                    <input type="email" th:field="*{email}" id="user_email">
-                    <label class="form-label" for="user_password">password</label>
-                    <input type="password" th:field="*{password}" id="user_password">
-                    <label class="form-label" for="user_passwordConfirmation">passwordConfirmation</label>
-                    <input type="password" th:field="*{passwordConfirmation}" id="user_passwordConfirmation">
-                    <input type="submit" value="submit">
-                </form>
-            </main>
+<div layout:fragment="content">
+    <div class="container form-container">
+        <div class="row">
+            <div class="col-md-6 form_area">
+                <main>
+                    <h3>Sign in</h3>
+                    <form th:action="@{/join}" th:object="${form}" method="post">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Name"  type="text" th:field="*{name}" id="user_name">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Email"  type="email" th:field="*{email}" id="user_email">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password"  type="password" th:field="*{password}" id="user_password">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password Confirmation"  type="password" th:field="*{passwordConfirmation}" id="user_passwordConfirmation">
+                        </div>
+                        <div class="form-group">
+                            <input class="btnSubmit" type="submit" value="submit">
+                        </div>
+                    </form>
+                </main>
+            </div>
         </div>
-
     </div>
 
 </body>

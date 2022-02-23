@@ -7,13 +7,15 @@
 </head>
 <body>
     <footer layout:fragment = "footerFragment">
-        <nav>
-            <div class = "container">
+        <div class="container-fluid">
                 <hr>
+            <div class="row text-center">
+                <div class = "col">
                 <span id="footer__text"></span>
                 <span>  &copy;</span>
+                </div>
             </div>
-        </nav>
+        </div>
         <script>
             var footerText = document.getElementById("footer__text");
             footerText.innerText =   "recipe note  " + new Date().getFullYear();

@@ -17,10 +17,10 @@ const app = new Vue({
 
 // Fontawesomeのインポート
 import {config, dom, library} from '@fortawesome/fontawesome-svg-core';
-import {faBlender} from '@fortawesome/free-solid-svg-icons';
+import {faBlender,faLock,faLockOpen} from '@fortawesome/free-solid-svg-icons';
 import {faComments} from '@fortawesome/free-regular-svg-icons';
 
-library.add(faComments,faBlender);
+library.add(faComments,faBlender,faLock,faLockOpen);
 
 dom.i2svg();
 dom.watch();

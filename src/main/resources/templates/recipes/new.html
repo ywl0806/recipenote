@@ -7,40 +7,58 @@
 <head>
     <th:block layout:fragment="script">
         <script th:src="@{ckeditor5-32.0.0/build/ckeditor.js}"></script>
+        <script th:src='@{//unpkg.com/jquery@3/dist/jquery.min.js}'></script>
+        <script th:src='@{//unpkg.com/popper.js@1/dist/umd/popper.min.js}'></script>
+        <script th:src='@{//unpkg.com/bootstrap@4/dist/js/bootstrap.min.js}'></script>
+        <script th:src="@{https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js}"></script>
     </th:block>
     <th:block layout:fragment="css">
         <style>
             .ck-editor__editable{
-                min-height: 300px
-               }
+                min-height: 500px
 
         </style>
+
+        <link th:href="@{https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css}" rel="stylesheet">
     </th:block>
     <meta charset="UTF-8">
     <title>Recipe</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container">
-        <form th:action="@{/create-recipe}" th:object="${form}" method="post">
-            <label for="recipe_name">Title</label>
-            <th:block sec:authorize="hasRole('ROLE_USER')">
-                <ul>
-                    <li><label for="is_true">public</label>
-                        <input type="radio" value="true" id="is_true" th:field="*{isPublic}"></li>
-                    <li><label for="is_false">not public</label>
-                        <input type="radio" value="false" id="is_false" th:field="*{isPublic}"></li>
-                </ul>
-                <ul th:each="store : ${storeList}">
-                    <li><label for="${store.id}" th:text="${store.name}"></label>
-                        <input type="radio" th:value="${store.id}" id="${store.id}" th:field="*{storeId}" checked="checked"></li>
-                </ul>
-            </th:block>
-            <input type="text" id="recipe_name" th:field="*{name}">
-            <textarea id="editor" th:field="*{content}">
+    <div class="container-xl form-container">
+        <form class="recipe-form" th:action="@{/create-recipe}" th:object="${form}" method="post">
+            <div class="form-group">
+                <label for="recipe_name"><h3>Title</h3></label>
+                <input class="form-control" type="text" id="recipe_name" th:field="*{name}">
+            </div>
+            <div class="form-group">
+            <textarea class="form-control" id="editor" th:field="*{content}">
                 </textarea>
-            <input type="submit" value="submit">
+            </div>
+            <th:block sec:authorize="hasRole('ROLE_USER')">
+                <hr>
+                <div class="row">
+                    <h4>Is public</h4>
+                    <div class="col-md-6">
+                <input class = "toggle-btn" type="checkbox" checked data-toggle="toggle" width = "30" data-size="lg" data-on="<i class='fa fa-lock-open'></i>" data-off="<i class='fa fa-lock'></i>" data-onstyle="success" data-offstyle="danger"
+                       value="false" th:field="*{isPublic}">
+                    </div>
+                </div>
+                <div class="row">
+                    <h4>Store</h4>
+                    <div class="col-md-2 btn-group btn-group-toggle" data-toggle="buttons" th:each="store : ${storeList}">
+                            <label class="btn btn-secondary" for="${store.id}" ><span th:text="${store.name}"></span>
+                            <input type="radio" name="options" th:value="${store.id}" id="${store.id}"
+                                   th:field="*{storeId}"></label>
+                    </div>
+                </div>
+            </th:block>
+            <div class="row" style="float: none; margin:100 auto;">
+                <input class="col-md-3 btnSubmit" type="submit" value="submit" style="float: none; margin:0 auto;">
+            </div>
         </form>
+
     </div>
     <div id="star"></div>
     <script>
@@ -54,6 +72,7 @@
                 .catch( error => {
                     console.error( error );
                 } );
+
     </script>
 </div>
 </body>

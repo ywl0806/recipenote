@@ -10019,20 +10019,47 @@ h3 {
     border-color: #dee2e6;
   }
 }
-body {
-  padding-top: 5rem;
-  background: #ecf0f1;
-  color: #2c3e50;
+header {
+  margin-bottom: 50px;
+  font-weight: 650;
 }
 
-nav.navbar {
-  background-color: rgba(0, 0, 0, 0.5);
-  border: 1px solid transparent;
-  border-color: white;
-  border-width: 0 0 1px;
-  margin-bottom: 20px;
-  padding: 0;
+.form-container {
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
-nav.navbar img {
-  height: 40px;
+.form-container form {
+  padding: 10%;
+}
+
+.form_area {
+  padding: 5%;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+  float: none;
+  margin: 0 auto;
+}
+.form_area h3 {
+  text-align: center;
+  color: #333;
+}
+
+.recipe-form {
+  padding: 5%;
+  float: none;
+  margin: 0 auto;
+}
+.recipe-form .row {
+  padding: 10px;
+  margin: 10px;
+}
+
+.btnSubmit {
+  width: 50%;
+  border-radius: 1rem;
+  padding: 1.5%;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  background-color: #0062cc;
 }

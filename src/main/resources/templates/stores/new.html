@@ -9,15 +9,23 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <h1>CREATE STORE</h1>
-    <div class="container">
-        <form th:object="${store}" th:action="@{new-store}" method="post">
-            <label for="name">Store Name</label>
-            <input type="text" id="name" th:field="*{name}">
-            <label for="description">Description</label>
-            <input type="text" id="description" th:field="*{description}" placeholder="店舗を紹介してください。">
-            <input type="submit" value="Submit">
-        </form>
+    <div class="container form-container">
+        <div class="row">
+            <div class="col-md-6 form_area">
+                <h1>CREATE STORE</h1>
+                <form th:object="${store}" th:action="@{new-store}" method="post">
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="name" th:field="*{name}" placeholder="Store Name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="description" th:field="*{description}" placeholder="店舗を紹介してください。">
+                    </div>
+                    <div class="form-group">
+                        <input class="btnSubmit" type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>

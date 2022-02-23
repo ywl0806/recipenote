@@ -7,14 +7,17 @@
 </head>
 <body>
 <div class="topics-index-wrapper" th:fragment="recipeList">
-    <h2>Recipe List</h2>
+
     <div class="container">
-        <div class="row" th:each="recipe : ${list}">
-            <div class="col-md-2"><a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
-                <h3 class="title" th:text="${recipe.name}"></h3>
-            </a></div>
-            <div class="col-md-2" th:text="${recipe.storeName}"> //</div>
-            <div class="col-md-2" th:text="${recipe.userName}"></div>
+        <h2>Recipe List</h2>
+        <div class="row">
+            <div class="col-md-3" th:each="recipe : ${list}">
+                <div class="col"><a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
+                    <h3 class="title" th:text="${recipe.name}"></h3>
+                </a></div>
+                <div class="col" th:text="${recipe.storeName}"> //</div>
+                <div class="col" th:text="${recipe.userName}"></div>
+            </div>
         </div>
     </div>
 
