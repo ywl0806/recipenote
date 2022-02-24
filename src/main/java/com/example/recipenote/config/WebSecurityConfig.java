@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/").permitAll()
                     .antMatchers("/login","/join").anonymous()
                     .antMatchers("/affiliate/{affiliateId}/**").access("@authorizationDynamicHandler.checkAffiliateId(authentication,#affiliateId)")
+                    .antMatchers("/recipe-detail/**").access("@authorizationDynamicHandler.checkRecipeDetailPermission(authentication,request)")
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
