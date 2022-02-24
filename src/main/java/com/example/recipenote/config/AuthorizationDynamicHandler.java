@@ -18,7 +18,6 @@ public class AuthorizationDynamicHandler {
             return false;
         }
         UserInf user = (UserInf) principal;
-
         return Objects.equals(user.getAffiliateId(), affiliateId);
     }
 }

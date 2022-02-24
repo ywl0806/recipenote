@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
 
-    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**"};
+    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**","/upload/**","/h2-console/**"};
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthorizationDynamicHandler authorizationDynamicHandler) {
         this.userDetailsService = userDetailsService;

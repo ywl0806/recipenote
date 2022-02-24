@@ -2,7 +2,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     generate-ddl: true
 
   h2:
@@ -12,12 +12,16 @@ spring:
     url: jdbc:h2:file:~/recipenote/testDB;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
-    initialization-mode: always
+    initialization-mode: embedded
 server:
   servlet:
     multipart:
-      location: C:\Users\ywl08\upload
       max-file-size: 10MB
       max-request-size: 50MB
 image:
   local: true
+
+resource:
+  path: file:///C:/Users/ywl08/resource/
+upload:
+  path: /upload/**

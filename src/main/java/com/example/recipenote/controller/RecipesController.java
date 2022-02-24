@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,9 +60,9 @@ public class RecipesController {
         model.addAttribute("form", form);
         return "recipes/new";
     }
-
+// アップロードの流れ：　thumbnailとレシピを作成（レシピのイメージは非同期処理でアップロード）　→　アップロード　→　thumbnailをscailing　→　サーバーに保存　→　パスのみdbの保存
     @PostMapping("/create-recipe")
-    public String createRecipe(Authentication authentication ,@ModelAttribute("form")RecipeForm form){
+    public String createRecipe(Authentication authentication , @ModelAttribute("form")RecipeForm form, MultipartFile image,HttpServletRequest request) throws Exception{
         UserInf user = (UserInf) authentication.getPrincipal();
         form.setUserId(user.getUserId());
         if (user.getAffiliateId()!=null){
@@ -70,6 +71,11 @@ public class RecipesController {
         if (form.getIsPublic()==null){
             form.setIsPublic(true);
         }
+        if (!image.isEmpty()){
+            String thumbnailPath = recipeService.saveThumbnailLocal(image,request);
+            form.setThumbnailPath(thumbnailPath);
+        }
+
         recipeService.newRecipe(form);
         return "redirect:/recipes";
     }

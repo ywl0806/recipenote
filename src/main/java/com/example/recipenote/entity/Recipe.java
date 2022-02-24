@@ -27,6 +27,9 @@ public class Recipe extends AbstractEntity {
     private String content;
 
     @Column
+    private String thumbnailPath;
+
+    @Column
     private Long affiliateId;
 
     @Column
