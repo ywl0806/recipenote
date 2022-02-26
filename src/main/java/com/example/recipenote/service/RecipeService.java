@@ -1,15 +1,14 @@
 package com.example.recipenote.service;
 
 import com.example.recipenote.entity.Recipe;
-import com.example.recipenote.entity.Store;
 import com.example.recipenote.entity.User;
+import com.example.recipenote.entity.UserInf;
 import com.example.recipenote.form.RecipeForm;
 import com.example.recipenote.repository.RecipeRepository;
-import com.example.recipenote.repository.StoreRepository;
 import com.example.recipenote.repository.UserRepository;
+import com.example.recipenote.service.tools.SaveImage;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +27,14 @@ public class RecipeService {
 
     @Autowired
     private final RecipeRepository recipeRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
-    private String localResourcePath = "C:/Users/ywl08/resource/";
+    private static String localResourcePath = "C:/Users/ywl08/resource/";
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
     }
 
     public void newRecipe(RecipeForm form) {
@@ -65,6 +67,23 @@ public class RecipeService {
         return mappingRecipeList(list);
     }
 
+    public List<RecipeForm> getPersonalRecipes(Long targetId, UserInf userInf) throws Exception{
+        Optional<User> targetUser = userRepository.findById(targetId);
+        List<Recipe> list;
+        if (targetUser.isPresent()){
+            UserInf tUser = targetUser.get();
+
+            if (Objects.equals(tUser.getAffiliateId(), userInf.getAffiliateId())){
+                list = recipeRepository.findByUserId(tUser.getUserId());
+                return mappingRecipeList(list);
+            }
+
+            list = recipeRepository.findByUserIdAndIsPublicTrue(targetId);
+            return mappingRecipeList(list);
+        }
+        return null;
+    }
+
     //    会社のrecipe
     public List<RecipeForm> getNotPublicRecipeList(Long id) {
         List<Recipe> list;
@@ -72,47 +91,14 @@ public class RecipeService {
         return mappingRecipeList(list);
     }
 
-    public String saveThumbnailLocal(MultipartFile image, HttpServletRequest request){
+    public String saveThumbnailLocal(MultipartFile image){
 
-        String imageExtension = StringUtils.getFilenameExtension(image.getOriginalFilename());
-        String imagePath = "thumbnails/";
-        String uploadDir = localResourcePath + imagePath; //実際のPath
-        String uploadId = UUID.randomUUID().toString() + "." + imageExtension;//image fileのname
-        try {
-            //imageを 400*400サイズでscaling
-            InputStream inputStream = image.getInputStream();
-            BufferedImage bufferedImage = ImageIO.read(inputStream);
-            BufferedImage thumbnailImage = Thumbnails.of(bufferedImage).size(400,400).asBufferedImage();
-            inputStream.close();
-            //　fileを作る
-            File file = new File(uploadDir + uploadId);
-            if (!file.exists()){
-                file.mkdirs();
-            }
-            //scalingしたimageを出力
-            ImageIO.write(thumbnailImage, Objects.requireNonNull(imageExtension),file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "/upload/" + imagePath + uploadId;
+        return SaveImage.saveThumbnail(image,"/thumbnails",400,400);
     }
 
-    public Map<String, Object> saveImageLocal(Map<String, Object> paramMap, MultipartRequest image, HttpServletRequest request) throws IOException {
-
-        MultipartFile uploadFile = image.getFile("upload");
-        String imagePath = "/images";
-        String uploadDir = localResourcePath + imagePath;
-        String uploadId = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(Objects.requireNonNull(uploadFile).getOriginalFilename());
-       try {
-           File file = new File(uploadDir +"/"+ uploadId);
-           if (!file.exists()) {
-               file.mkdirs();
-           }
-           uploadFile.transferTo(file);
-           paramMap.put("url", "/upload"+ imagePath + "/"+ uploadId);
-       }catch (IOException e){
-           e.printStackTrace();
-       }
+    public Map<String, Object> saveImageLocal(Map<String, Object> paramMap, MultipartFile image) throws IOException {
+        String path = SaveImage.saveImage(image,"/images");
+        paramMap.put("url",path);
 
         return paramMap;
     }

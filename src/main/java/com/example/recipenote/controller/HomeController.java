@@ -3,6 +3,7 @@ package com.example.recipenote.controller;
 import com.example.recipenote.entity.User;
 import com.example.recipenote.entity.UserInf;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

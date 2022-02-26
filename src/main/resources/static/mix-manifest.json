@@ -1,4 +1,5 @@
 {
     "/scripts/app.js": "/scripts/app.js",
+    "/scripts/cropper.js": "/scripts/cropper.js",
     "/css/app.css": "/css/app.css"
 }

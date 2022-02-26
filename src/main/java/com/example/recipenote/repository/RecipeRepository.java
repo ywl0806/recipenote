@@ -8,4 +8,6 @@ import java.util.List;
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findByIsPublicTrue();
     List<Recipe> findByAffiliateId(Long affiliateId);
+    List<Recipe> findByUserId(Long userId);
+    List<Recipe> findByUserIdAndIsPublicTrue(Long userId);
 }

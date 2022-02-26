@@ -41,6 +41,9 @@ public class User extends AbstractEntity implements UserDetails ,UserInf{
     @Column
     private Long affiliateId;
 
+    @Column
+    private String avatarUrl;
+
     @Column(nullable = false)
     private  Boolean enabled = true;
 

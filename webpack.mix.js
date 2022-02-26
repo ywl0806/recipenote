@@ -15,6 +15,7 @@ mix
   .vue()
   .sourceMaps()
   .js('src/main/resources/assets/js/app.js', 'scripts')
+  .js('src/main/resources/assets/js/cropper.js', 'scripts')
   .sass('src/main/resources/assets/sass/app.scss', 'css')
   // This one is important: you have to set the local path to the folder
   // for public accessible static resources.

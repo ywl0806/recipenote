@@ -3,27 +3,19 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-        layout:decorate="~{layouts/layout}"
-
->
+        layout:decorate="~{layouts/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Recipe Note</title>
-    <th:block layout:fragment="script">
+    <th:block layout:fragment="css">
+        <style>
+        </style>
     </th:block>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
-    <div sec:authorize="isAuthenticated()">
-        <h1>Welcome!   </h1>
-        <h2 sec:authentication="principal.name"></h2>
     </div>
-    <h1 th:text="${message}">Hello world!</h1>
-    <div th:if = "${affiliateId != null}">
-        <a th:href="@{/affiliate/{affiliateId}(affiliateId=${affiliateId})}"> 회사 </a>
-    </div>
-    </div>
+
+
 </div>
 </body>
 </html>

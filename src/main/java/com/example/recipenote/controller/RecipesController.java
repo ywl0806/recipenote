@@ -28,21 +28,24 @@ public class RecipesController {
     private final RecipeService recipeService;
     @Autowired
     private final StoreService storeService;
+
     public RecipesController(RecipeService recipeService, StoreService storeService) {
         this.recipeService = recipeService;
         this.storeService = storeService;
     }
+
     @Value("${image.local}")
     private Boolean imageLocal;
 
     @GetMapping("/recipe-detail")
-    public String detail(Model model, Authentication authentication, @RequestParam Long id){
+    public String detail(Model model, Authentication authentication, @RequestParam Long id) {
         RecipeForm recipe = recipeService.getRecipe(id);
-        model.addAttribute("recipe",recipe);
+        model.addAttribute("recipe", recipe);
         return "recipes/detail";
     }
+
     @GetMapping("/recipes")
-    public String index(Model model, Authentication authentication){
+    public String index(Model model, Authentication authentication) {
 
         List<RecipeForm> list = recipeService.getAllPublicRecipeList();
         model.addAttribute("list", list);
@@ -53,40 +56,45 @@ public class RecipesController {
     public String writeRecipe(Model model, Authentication authentication) {
         RecipeForm form = new RecipeForm();
         UserInf user = (UserInf) authentication.getPrincipal();
-        if (user.getAffiliateId() != null){
+        if (user.getAffiliateId() != null) {
             List<Store> storeList = storeService.getStoreList(user.getAffiliateId());
-            model.addAttribute("storeList",storeList);
+            model.addAttribute("storeList", storeList);
         }
         model.addAttribute("form", form);
         return "recipes/new";
     }
-// アップロードの流れ：　thumbnailとレシピを作成（レシピのイメージは非同期処理でアップロード）　→　アップロード　→　thumbnailをscailing　→　サーバーに保存　→　パスのみdbの保存
+
+    // アップロードの流れ：　thumbnailとレシピを作成（レシピのイメージは非同期処理でアップロード）　→　アップロード　→　thumbnailをscailing　→　サーバーに保存　→　パスのみdbの保存
     @PostMapping("/create-recipe")
-    public String createRecipe(Authentication authentication , @ModelAttribute("form")RecipeForm form, MultipartFile image,HttpServletRequest request) throws Exception{
+    public String createRecipe(Authentication authentication, @ModelAttribute("form") RecipeForm form) throws Exception {
         UserInf user = (UserInf) authentication.getPrincipal();
         form.setUserId(user.getUserId());
-        if (user.getAffiliateId()!=null){
+        if (user.getAffiliateId() != null) {
             form.setAffiliateId(user.getAffiliateId());
         }
-        if (form.getIsPublic()==null){
+        if (form.getIsPublic() == null) {
             form.setIsPublic(true);
         }
-        if (!image.isEmpty()){
-            String thumbnailPath = recipeService.saveThumbnailLocal(image,request);
-            form.setThumbnailPath(thumbnailPath);
-        }
-
         recipeService.newRecipe(form);
         return "redirect:/recipes";
     }
 
     @ResponseBody
-    @PostMapping("/upload/image")
-    public Map<String,Object> uploadImage(
-            @RequestParam Map<String, Object> paramMap, MultipartRequest image, HttpServletRequest request) throws Exception{
-       if (imageLocal){
-           paramMap = recipeService.saveImageLocal(paramMap,image,request);
-       }
+    @PostMapping("/upload-image")
+    public Map<String, Object> uploadImage(
+            @RequestParam Map<String, Object> paramMap, MultipartRequest image) throws Exception {
+        MultipartFile file = image.getFile("upload");
+        if (imageLocal) {
+            paramMap = recipeService.saveImageLocal(paramMap, file);
+        }
         return paramMap;
+    }
+    @ResponseBody
+    @PostMapping("/upload-thumbnail")
+    public String uploadThumbnail(MultipartFile avatar) {
+        if (!avatar.isEmpty()) {
+            return recipeService.saveThumbnailLocal(avatar);
+        }
+        return "";
     }
 }
