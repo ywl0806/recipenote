@@ -8,7 +8,9 @@ import com.example.recipenote.repository.RoleRepository;
 import com.example.recipenote.repository.UserRepository;
 import com.example.recipenote.service.tools.SaveImage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,7 +31,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private String localResourcePath = "C:/Users/ywl08/resource/";
+    private final String localResourcePath = "C:/Users/ywl08/resource/";
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -80,6 +82,9 @@ public class UserService {
         }
         userRepository.saveAndFlush(user);
 
+//       認証をリロードする
+        Authentication reAuth = new UsernamePasswordAuthenticationToken(user,user.getPassword(),user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(reAuth);
         return user.getUserId();
     }
 

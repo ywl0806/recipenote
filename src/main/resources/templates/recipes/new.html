@@ -7,66 +7,153 @@
 <head>
     <th:block layout:fragment="script">
         <script th:src="@{ckeditor5-32.0.0/build/ckeditor.js}"></script>
-        <!--        <script th:src='@{//unpkg.com/jquery@3/dist/jquery.min.js}'></script>-->
-        <!--        <script th:src='@{//unpkg.com/popper.js@1/dist/umd/popper.min.js}'></script>-->
-        <!--        <script th:src='@{//unpkg.com/bootstrap@4/dist/js/bootstrap.min.js}'></script>-->
-        <!--        <script th:src="@{https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js}"></script>-->
     </th:block>
     <th:block layout:fragment="css">
         <style>
-            .ck-editor__editable{
-                min-height: 500px
-
-
-
-
-
+            .ck-editor__editable {
+                min-height: 700px;
+            }
         </style>
-
-        <!--        <link th:href="@{https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css}"-->
-        <!--              rel="stylesheet">-->
     </th:block>
     <meta charset="UTF-8">
     <title>Recipe</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container-xl form-container">
-            <label class="label image-wrapper" data-toggle="tooltip" title="Thumbnail Image">
-                <img class="rounded profile-pic" id="avatar" th:src="@{/images/nullThumbnailRecipe.jpg}"
-                     alt="avatar">
-                <div class="upload-button">
-                    <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
-                </div>
-                <input type="file" class="sr-only file-upload" id="input" name="image" accept="image/*">
-            </label>
-
-            <div class="alert" role="alert"></div>
-            <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Crop the image</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+    <div class="container-xl">
+        <form class="recipe-form" th:action="@{/create-recipe}" th:object="${form}" method="post"
+              enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-auto">
+                    <label class="label image-wrapper" data-toggle="tooltip" title="Thumbnail Image">
+                        <img class="rounded profile-pic" id="avatar" th:src="@{/images/nullThumbnailRecipe.jpg}"
+                             alt="avatar">
+                        <div class="upload-button">
+                            <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                         </div>
-                        <div class="modal-body">
-                            <div class="img-container">
-                                <img id="image" th:src="@{/images/nullThumbnailRecipe.jpg}">
+                        <input type="file" class="sr-only file-upload" id="input" name="image" accept="image/*">
+                    </label>
+
+                    <div class="alert img-upload-alert" role="alert"></div>
+                    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="img-container">
+                                        <img id="image" th:src="@{/images/nullThumbnailRecipe.jpg}">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                    </div>
+                </div>
+                <div class="col-lg-auto ingredient-container overflow-auto" id="in-container">
+                    <h4>材料</h4>
+                    <table class="table overflow-auto table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">名</th>
+                            <th scope="col">量</th>
+                            <th scope="col">価格</th>
+                        </tr>
+                        </thead>
+                        <tbody class="overflow-auto">
+                        <tr th:each="ingredient, item : *{ingredients}">
+                            <th scope="col"><span th:text="${item.index}+1"></span></th>
+                            <td><input class="form-control-sm add-ingredient" type="text" th:id="name_+${item.index}"
+                                       readonly="readonly"></td>
+                            <td><input class="form-control-sm amount" th:id="amount_+${item.index}" type="text"
+                                       th:field="*{ingredients[__${item.index}__].amount}"></td>
+                            <td><span th:id="total_+${item.index}"></span><span>　円</span></td>
+                            <input type="hidden" th:id="price_+${item.index}" value="0">
+                            <input type="hidden" th:id="id_+${item.index}"
+                                   th:field="*{ingredients[__${item.index}__].ingredientId}">
+                        </tr>
+                        </tbody>
+                        <tfoot class="fixed-table">
+                        <tr class="table-info">
+                            <td colspan="3">Total</td>
+                            <td ><span th:id="total_price"></span><span>  円</span></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <!--                    <div id="add-ingredient"><i class="fa fa-plus"></i></div>-->
+                    <div class="modal fade" id="ingredient-modal" tabindex="-1" role="dialog"
+                         aria-labelledby="i-modal-label"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-title" id="i-modal-label">search ingredent</div>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="食材を検索"
+                                               aria-label="食材を検索" aria-describedby="button-addon2"
+                                               id="search-value">
+                                        <div class="btn btn-outline-secondary" type="button"
+                                             id="search-btn"><i class="fa fa-search"></i></div>
+                                    </div>
+                                    <table class="table table-hover table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">name</th>
+                                            <th scope="col">price</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="list-container">
+
+                                        </tbody>
+                                    </table>
+                                    <div class="row justify-content-center">
+                                        <i class="fas fa-angle-left col-auto btn-info"></i>
+                                        <i class="fas fa-angle-right col-auto btn-info"></i>
+                                    </div>
+                                </div>
+                                <div class="md-3">
+                                    <div class="btn btn-light" data-toggle="collapse" href="#create-ingredient"
+                                         role="button" aria-expanded="false" aria-controls="collapseExample"
+                                         id="collapse">
+                                        create ingredient
+                                    </div>
+                                    <div class="collapse" id="create-ingredient">
+                                        <div class="card card-body">
+                                            <label for="ingredient-name">食材名</label>
+                                            <input type="text" class="form-control" id="ingredient-name">
+                                            <label for="ingredient-gram">グラム</label>
+                                            <input type="number" class="form-control" id="ingredient-gram" value="">
+                                            <label for="ingredient-price">価格</label>
+                                            <input type="number" class="form-control" id="ingredient-price" value="">
+                                            <span class="btn btn-link" id="create-ingredient-submit">submit</span>
+                                        </div>
+                                    </div>
+                                    <div class="alert ing-upload-alert" role="alert"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <span id="input-value"></span>
+                                    <span class="btn btn-info" id="search-result-input">input</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        <form class="recipe-form" th:action="@{/create-recipe}" th:object="${form}" method="post"
-              enctype="multipart/form-data">
             <input type="hidden" id="image-path" th:field="*{thumbnailPath}" value="">
             <div class="form-group">
                 <label for="recipe_name"><h3>Title</h3></label>
@@ -96,8 +183,9 @@
                                    th:field="*{storeId}"></label>
                     </div>
                 </div>
+
             </th:block>
-            <div class="row" style="float: none; margin:100 auto;">
+            <div class="row" style="float: none;">
                 <input class="col-md-3 btnSubmit" type="submit" value="submit"
                        style="float: none; margin:0 auto;">
             </div>
@@ -105,21 +193,24 @@
 
     </div>
     <script src="/scripts/cropper.js"></script>
+    <script src="/scripts/searchIngredient.js"></script>
     <script>
-            ClassicEditor
-                .create( document.querySelector( '#editor' ),{
-                    simpleUpload: {
-                        uploadUrl: '/upload-image',
-                        withCredintials: true
-                    }
-                })
-                .catch( error => {
-                    console.error( error );
-                } );
-
-
-
-
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                simpleUpload: {
+                    uploadUrl: '/upload-image',
+                    withCredintials: true
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        document.addEventListener('keydown', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+            }
+        }, true);
+        //--------------------------------------------------------------------------------------------
 
     </script>
 </div>

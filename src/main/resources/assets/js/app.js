@@ -12,10 +12,10 @@ Vue.component('star-rating', StarRating);
 
 // Fontawesomeのインポート
 import {config, dom, library} from '@fortawesome/fontawesome-svg-core';
-import {faBlender,faLock,faLockOpen,faArrowCircleUp} from '@fortawesome/free-solid-svg-icons';
+import {faBlender,faLock,faLockOpen,faArrowCircleUp,faPlus,faSearch,faAngleLeft,faAngleRight} from '@fortawesome/free-solid-svg-icons';
 import {faComments} from '@fortawesome/free-regular-svg-icons';
 
-library.add(faComments,faBlender,faLock,faLockOpen,faArrowCircleUp);
+library.add(faComments,faBlender,faLock,faLockOpen,faArrowCircleUp,faPlus,faSearch,faAngleLeft,faAngleRight);
 
 
 dom.i2svg();

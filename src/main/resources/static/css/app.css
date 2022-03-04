@@ -10020,8 +10020,11 @@ h3 {
   }
 }
 header {
-  margin-bottom: 50px;
   font-weight: 650;
+}
+
+.container {
+  margin-top: 50px;
 }
 
 .form-container {
@@ -10047,10 +10050,6 @@ header {
   padding: 5%;
   float: none;
   margin: 0 auto;
-}
-.recipe-form .row {
-  padding: 10px;
-  margin: 10px;
 }
 
 .btnSubmit {
@@ -10149,4 +10148,8 @@ header {
 
 .img-container img {
   max-width: 100%;
+}
+
+.ingredient-container {
+  max-height: 350px;
 }

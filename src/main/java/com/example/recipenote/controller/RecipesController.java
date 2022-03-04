@@ -1,7 +1,9 @@
 package com.example.recipenote.controller;
 
+import com.example.recipenote.entity.Ingredient;
 import com.example.recipenote.entity.Store;
 import com.example.recipenote.entity.UserInf;
+import com.example.recipenote.form.AmountOfIngredientForm;
 import com.example.recipenote.form.RecipeForm;
 import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
@@ -60,6 +62,10 @@ public class RecipesController {
             List<Store> storeList = storeService.getStoreList(user.getAffiliateId());
             model.addAttribute("storeList", storeList);
         }
+
+        for (int i = 0; i < 30; i++) {
+            form.addIngredient(new AmountOfIngredientForm());
+        }
         model.addAttribute("form", form);
         return "recipes/new";
     }
@@ -75,6 +81,7 @@ public class RecipesController {
         if (form.getIsPublic() == null) {
             form.setIsPublic(true);
         }
+        System.out.println(form.getIngredients());
         recipeService.newRecipe(form);
         return "redirect:/recipes";
     }

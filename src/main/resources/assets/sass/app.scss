@@ -7,10 +7,11 @@
 @import '~bootstrap/scss/bootstrap';
 
 header{
-    margin-bottom: 50px;
     font-weight: 650;
 }
-
+.container{
+    margin-top: 50px;
+}
 .form-container{
     margin-top: 5%;
     margin-bottom: 5%;
@@ -33,10 +34,7 @@ header{
     padding: 5%;
     float: none;
     margin:0 auto;
-    .row{
-    padding: 10px;
-    margin: 10px;
-    }
+
 }
 .btnSubmit
 {
@@ -128,3 +126,6 @@ header{
 .img-container img {
       max-width: 100%;
     }
+.ingredient-container{
+	max-height: 350px;
+}

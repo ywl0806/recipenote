@@ -1,14 +1,11 @@
 package com.example.recipenote.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -35,6 +32,7 @@ public class Recipe extends AbstractEntity {
     @Column
     private Long storeId;
 
+
     @Column(nullable = false)
     private Long userId;
 
@@ -57,13 +55,18 @@ public class Recipe extends AbstractEntity {
     @JoinColumn(name = "recipeId", insertable = false, updatable = false)
     private List<Comment> comments;
 
-    @ManyToMany
-    @JoinTable(name = "RECIPE_INGREDIENT",
-            joinColumns = @JoinColumn(name = "RECIPE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "INGREDIENT_ID"))
-    private Set<Ingredient> ingredients = new HashSet<>();
+    @OneToMany(mappedBy = "id")
+    private List<AmountOfIngredient> ingredients = new ArrayList<>();
 
-    public void addIngredient(Ingredient ingredient){
+
+//    @ManyToMany
+//    @JoinTable(name = "RECIPE_INGREDIENT",
+//            joinColumns = @JoinColumn(name = "RECIPE_ID"),
+//            inverseJoinColumns = @JoinColumn(name = "INGREDIENT_ID"))
+//    private Set<Ingredient> ingredients = new HashSet<>();
+//
+//
+    public void addIngredient(AmountOfIngredient ingredient){
         this.ingredients.add(ingredient);
     }
 }

@@ -3,6 +3,8 @@ package com.example.recipenote.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,8 +16,10 @@ public class Ingredient extends AbstractEntity {
     private Long id;
 
     @Column
-    private int price;
+    private Double price = 0.0;
 
     @Column(nullable = false)
     private String name;
+
+
 }

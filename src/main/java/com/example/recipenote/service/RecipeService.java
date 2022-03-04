@@ -1,25 +1,18 @@
 package com.example.recipenote.service;
 
-import com.example.recipenote.entity.Recipe;
-import com.example.recipenote.entity.User;
-import com.example.recipenote.entity.UserInf;
+import com.example.recipenote.entity.*;
+import com.example.recipenote.form.AmountOfIngredientForm;
 import com.example.recipenote.form.RecipeForm;
+import com.example.recipenote.repository.AmountOfIngredientRepository;
+import com.example.recipenote.repository.IngredientRepository;
 import com.example.recipenote.repository.RecipeRepository;
 import com.example.recipenote.repository.UserRepository;
 import com.example.recipenote.service.tools.SaveImage;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -29,12 +22,17 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     @Autowired
     private final UserRepository userRepository;
-
+    @Autowired
+    private final AmountOfIngredientRepository amountOfIngredientRepository;
+    @Autowired
+    private final IngredientRepository ingredientRepository;
     private static String localResourcePath = "C:/Users/ywl08/resource/";
 
-    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository) {
+    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository, AmountOfIngredientRepository amountOfIngredientRepository, IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
+        this.amountOfIngredientRepository = amountOfIngredientRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
     public void newRecipe(RecipeForm form) {
@@ -46,6 +44,23 @@ public class RecipeService {
         entity.setAffiliateId(form.getAffiliateId());
         entity.setStoreId(form.getStoreId());
         entity.setThumbnailPath(form.getThumbnailPath());
+
+        List<AmountOfIngredient> amountOfIngredientList = new ArrayList<>();
+        for (AmountOfIngredientForm amountForm : form.getIngredients()){
+            if (amountForm.getIngredientId() != null){
+                Ingredient ingEntity = ingredientRepository.getById(amountForm.getIngredientId());
+                AmountOfIngredient ingredient = new AmountOfIngredient();
+                ingredient.setAmount(amountForm.getAmount());
+                ingredient.setIngredient(ingEntity);
+                amountOfIngredientList.add(ingredient);
+            }
+        }
+        entity = recipeRepository.save(entity);
+        for (AmountOfIngredient amount : amountOfIngredientList){
+            amount.setRecipe(entity);
+            amountOfIngredientRepository.save(amount);
+        }
+        entity.setIngredients(amountOfIngredientList);
         recipeRepository.save(entity);
     }
 
