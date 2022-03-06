@@ -1,5 +1,6 @@
 package com.example.recipenote.config;
 
+import com.example.recipenote.config.authhandler.AuthFailureHandler;
 import com.example.recipenote.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,14 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private FormAuthenticationProvider authenticationProvider;
+    private final AuthFailureHandler authFailureHandler;
 
     @Autowired
     private final UserDetailsServiceImpl userDetailsService;
@@ -27,15 +26,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private final AuthorizationDynamicHandler authorizationDynamicHandler;
 
-    @Autowired
-    private DataSource dataSource;
-
-
-    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**","/upload/**","/h2-console/**"};
-
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthorizationDynamicHandler authorizationDynamicHandler) {
+    public WebSecurityConfig(AuthFailureHandler authFailureHandler, UserDetailsServiceImpl userDetailsService, AuthorizationDynamicHandler authorizationDynamicHandler) {
+        this.authFailureHandler = authFailureHandler;
         this.userDetailsService = userDetailsService;
         this.authorizationDynamicHandler = authorizationDynamicHandler;
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    private static final String[] URLS = {"/css/**", "/images/**", "/scripts/**", "/upload/**", "/h2-console/**"};
+
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -48,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
-                    .antMatchers("/login","/join").anonymous()
+                    .antMatchers("/login", "/join").anonymous()
                     .antMatchers("/affiliate/{affiliateId}/**").access("@authorizationDynamicHandler.checkAffiliateId(authentication,#affiliateId)")
                     .antMatchers("/recipe-detail/**").access("@authorizationDynamicHandler.checkRecipeDetailPermission(authentication,request)")
                     .anyRequest().authenticated()
@@ -56,29 +63,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                     .loginPage("/login")
                     .defaultSuccessUrl("/")
+                    .failureHandler(authFailureHandler)
                     .permitAll()
                     .and()
                 .logout()
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/login");
-                    //.permitAll();
+        //.permitAll();
     }
 
 
-//    @Override
+    //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.authenticationProvider(authenticationProvider);
 //    }
     //Authentication -> login
     //Authroization -> 権限の設定
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-        auth.authenticationProvider(authenticationProvider);
-    }
+
+
 }

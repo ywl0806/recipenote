@@ -18,16 +18,18 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository repository;
+    UserRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if (username == null || "".equals(username)) {
+        User user = repository.findByUsername(username);
+
+        if (user==null) {
             throw new UsernameNotFoundException("Username is empty");
         }
 
-        return repository.findByUsername(username);
+        return user;
     }
 
 }

@@ -119,9 +119,12 @@ header{
       display: none;
       margin-bottom: 1rem;
     }
-.alert {
-      display: none;
-    }
+.alert-none{
+	.alert {
+		display: none;
+	}
+}
+
 
 .img-container img {
       max-width: 100%;

@@ -59,6 +59,7 @@ addBtn.forEach(item => {
                 inputValue.textContent = "";
                 $searchBtn.off('click')
                 $('#search-result-input').off('click');
+                createIngBtn.removeEventListener('click',createIngredientHandler);
                 resultList = [];
             })
         })
@@ -129,10 +130,7 @@ addBtn.forEach(item => {
         });
 
 
-
-        //create ingredient
-        createIngBtn.addEventListener("click", function () {
-
+        function createIngredientHandler() {
             if (gram.value === "" && price.value === "") {
                 console.log("가격과 무게가 널임");
             } else {
@@ -157,6 +155,10 @@ addBtn.forEach(item => {
                         price.value = "";
                         jsonValue = JSON.parse(result)
                         inputValue.textContent = jsonValue.name
+
+                        resultCon.id = jsonValue.id;
+                        resultCon.name = jsonValue.name;
+                        resultCon.price = jsonValue.price;
                     },
 
                     error: function () {
@@ -166,7 +168,9 @@ addBtn.forEach(item => {
                 })
             }
 
-        })
+        }
+        //create ingredient
+        createIngBtn.addEventListener("click", createIngredientHandler);
     })
 })
 

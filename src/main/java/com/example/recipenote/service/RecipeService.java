@@ -36,32 +36,29 @@ public class RecipeService {
     }
 
     public void newRecipe(RecipeForm form) {
-        Recipe entity = new Recipe();
-        entity.setName(form.getName());
-        entity.setContent(form.getContent());
-        entity.setUserId(form.getUserId());
-        entity.setIsPublic(form.getIsPublic());
-        entity.setAffiliateId(form.getAffiliateId());
-        entity.setStoreId(form.getStoreId());
-        entity.setThumbnailPath(form.getThumbnailPath());
+        Recipe recipe = new Recipe();
+        recipe.setName(form.getName());
+        recipe.setContent(form.getContent());
+        recipe.setUserId(form.getUserId());
+        recipe.setIsPublic(form.getIsPublic());
+        recipe.setAffiliateId(form.getAffiliateId());
+        recipe.setStoreId(form.getStoreId());
+        if (!Objects.equals(form.getThumbnailPath(), "")){
+            recipe.setThumbnailPath(form.getThumbnailPath());
+        }
 
-        List<AmountOfIngredient> amountOfIngredientList = new ArrayList<>();
         for (AmountOfIngredientForm amountForm : form.getIngredients()){
             if (amountForm.getIngredientId() != null){
-                Ingredient ingEntity = ingredientRepository.getById(amountForm.getIngredientId());
-                AmountOfIngredient ingredient = new AmountOfIngredient();
-                ingredient.setAmount(amountForm.getAmount());
-                ingredient.setIngredient(ingEntity);
-                amountOfIngredientList.add(ingredient);
+                Ingredient ingredient = ingredientRepository.getById(amountForm.getIngredientId());
+                AmountOfIngredient amount = new AmountOfIngredient();
+                amount.setAmount(amountForm.getAmount());
+                amount.setIngredient(ingredient);
+                amountOfIngredientRepository.save(amount);
+                recipe.addIngredient(amount);
             }
         }
-        entity = recipeRepository.save(entity);
-        for (AmountOfIngredient amount : amountOfIngredientList){
-            amount.setRecipe(entity);
-            amountOfIngredientRepository.save(amount);
-        }
-        entity.setIngredients(amountOfIngredientList);
-        recipeRepository.save(entity);
+
+        recipeRepository.save(recipe);
     }
 
     public RecipeForm getRecipe(Long id) {

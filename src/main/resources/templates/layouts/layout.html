@@ -8,11 +8,12 @@
     <title>Recipe Note</title>
 </head>
 <body>
-    <header layout:replace="~{fragments/header :: headerFragment}"></header>
-    <main>
+<header layout:replace="~{fragments/header :: headerFragment}"></header>
+<main>
+    <div layout:replace="~{fragments/message :: messageFragment}"></div>
     <div layout:fragment="content"></div>
-    </main>
-    <footer layout:replace="~{fragments/footer :: footerFragment}"></footer>
+</main>
+<footer layout:replace="~{fragments/footer :: footerFragment}"></footer>
 
 </body>
 </html>

@@ -80,7 +80,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
                     success: function (path) {
                         $alert.show().addClass('alert-success').text('Upload success');
-                        imagePath.value = path;
+                        if (path === ""){
+                            imagePath.value = null;
+                        }else{
+                            imagePath.value = path;
+                        }
+
                     },
 
                     error: function () {

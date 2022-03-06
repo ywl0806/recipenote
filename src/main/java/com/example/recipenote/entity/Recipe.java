@@ -67,6 +67,7 @@ public class Recipe extends AbstractEntity {
 //
 //
     public void addIngredient(AmountOfIngredient ingredient){
+        ingredient.setRecipe(this);
         this.ingredients.add(ingredient);
     }
 }

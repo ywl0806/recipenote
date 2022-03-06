@@ -1,17 +1,26 @@
 package com.example.recipenote.controller;
 
-import com.example.recipenote.entity.User;
 import com.example.recipenote.entity.UserInf;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.security.Principal;
+import java.util.Locale;
+
+
 
 @Controller
 public class HomeController {
+
+    @Autowired
+    private final MessageSource messageSource;
+
+    public HomeController(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @GetMapping("/")
     public String home(Model model, Authentication authentication) {

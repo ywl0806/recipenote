@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,19 +39,12 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public void join(UserForm userForm){
         String name = userForm.getName();
         String email = userForm.getEmail();
         String password = userForm.getPassword();
-        String passwordConfirmation = userForm.getPasswordConfirmation();
 
-
-        if (!password.equals(passwordConfirmation)){
-            throw new IllegalStateException("passwordが一致しません。");
-        }
-        if (userRepository.findByUsername(email) != null) {
-            throw new IllegalStateException("ユーザーが存在します。");
-        }
         User newUser = new User(email,name,passwordEncoder.encode(password));
         Role role = roleRepository.findByName("ROLE_GUEST");
         newUser.addRole(role);
@@ -103,5 +97,9 @@ public class UserService {
 
     public String saveUserAvatar(MultipartFile avatar){
         return SaveImage.saveThumbnail(avatar,"/avatars",500,500);
+    }
+
+    public Boolean checkUserDuplicates(String email){
+        return userRepository.findByUsername(email) == null;
     }
 }
