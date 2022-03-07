@@ -13,7 +13,7 @@ import java.util.*;
 
 @Entity
 @Data
-@Table(name = "user")
+@Table(name = "usr")
 @NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails ,UserInf{
 
