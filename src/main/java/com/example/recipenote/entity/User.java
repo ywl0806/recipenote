@@ -25,7 +25,7 @@ public class User extends AbstractEntity implements UserDetails ,UserInf{
     }
 
     @Id
-    @SequenceGenerator(name = "user_id_seq")
+    @SequenceGenerator(name = "usr_id_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
