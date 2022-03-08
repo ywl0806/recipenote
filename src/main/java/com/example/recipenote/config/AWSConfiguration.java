@@ -23,10 +23,16 @@ public class AWSConfiguration {
     private String awsDefaultRegion;
 
     @Bean
+    public BasicAWSCredentials basicAWSCredentials() {
+        return new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey);
+    }
+    @Bean
     public AmazonS3 s3Client() {
+        BasicAWSCredentials creds = new BasicAWSCredentials(awsAccessKeyId,awsSecretAccessKey);
+
         return AmazonS3ClientBuilder.standard()
                 .withRegion(awsDefaultRegion)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey)))
+                .withCredentials(new AWSStaticCredentialsProvider(creds))
                 .build();
     }
 
