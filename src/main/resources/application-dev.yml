@@ -38,3 +38,9 @@ cloud:
     region:
       auto: false
       static: ap-northeast-1
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
