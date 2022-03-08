@@ -25,7 +25,7 @@ server:
       max-file-size: 10MB
       max-request-size: 50MB
 image:
-  local: true
+  local: false
 
 resource:
   path: file:///C:/Users/ywl08/resource/
@@ -38,9 +38,9 @@ cloud:
     region:
       auto: false
       static: ap-northeast-1
-logging:
-  level:
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: error
+#logging:
+#  level:
+#    com:
+#      amazonaws:
+#        util:
+#          EC2MetadataUtils: error
