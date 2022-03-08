@@ -1,4 +1,4 @@
-package com.example.recipenote.service.tools;
+package com.example.recipenote.service.utils;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.util.StringUtils;
@@ -16,7 +16,7 @@ public final class SaveImage {
 
     private static final String localResourcePath = "C:/Users/ywl08/resource/";
 
-    public static String saveImage(MultipartFile image, String imagePath){
+    public static String saveImage(MultipartFile image, String imagePath) throws IOException {
 
         String imageExtension = StringUtils.getFilenameExtension(image.getOriginalFilename());
         String uploadId = UUID.randomUUID().toString() + "." + imageExtension;//image fileのname
@@ -33,7 +33,7 @@ public final class SaveImage {
             }
             ImageIO.write(bufferedImage, Objects.requireNonNull(imageExtension),file);
         }catch (IOException e){
-            e.printStackTrace();
+            throw new IOException("fail to upload");
         }
         return "/upload" + imagePath + "/" + uploadId;
     }

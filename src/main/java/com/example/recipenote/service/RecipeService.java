@@ -7,7 +7,7 @@ import com.example.recipenote.repository.AmountOfIngredientRepository;
 import com.example.recipenote.repository.IngredientRepository;
 import com.example.recipenote.repository.RecipeRepository;
 import com.example.recipenote.repository.UserRepository;
-import com.example.recipenote.service.tools.SaveImage;
+import com.example.recipenote.service.utils.SaveImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,11 +108,11 @@ public class RecipeService {
         return SaveImage.saveThumbnail(image,"/thumbnails",400,400);
     }
 
-    public Map<String, Object> saveImageLocal(Map<String, Object> paramMap, MultipartFile image) throws IOException {
+    public String saveImageLocal(MultipartFile image) throws IOException {
         String path = SaveImage.saveImage(image,"/images");
-        paramMap.put("url",path);
 
-        return paramMap;
+
+        return path;
     }
         public List<RecipeForm> mappingRecipeList (List < Recipe > list) {
             List<RecipeForm> recipeForms = new ArrayList<RecipeForm>();

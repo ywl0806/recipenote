@@ -1,10 +1,10 @@
 package com.example.recipenote.controller;
 
-import com.example.recipenote.entity.Ingredient;
 import com.example.recipenote.entity.Store;
 import com.example.recipenote.entity.UserInf;
 import com.example.recipenote.form.AmountOfIngredientForm;
 import com.example.recipenote.form.RecipeForm;
+import com.example.recipenote.service.AwsS3Service;
 import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +30,13 @@ public class RecipesController {
     private final RecipeService recipeService;
     @Autowired
     private final StoreService storeService;
+    @Autowired
+    private final AwsS3Service awsS3Service;
 
-    public RecipesController(RecipeService recipeService, StoreService storeService) {
+    public RecipesController(RecipeService recipeService, StoreService storeService, AwsS3Service awsS3Service) {
         this.recipeService = recipeService;
         this.storeService = storeService;
+        this.awsS3Service = awsS3Service;
     }
 
     @Value("${image.local}")
@@ -91,9 +94,13 @@ public class RecipesController {
     public Map<String, Object> uploadImage(
             @RequestParam Map<String, Object> paramMap, MultipartRequest image) throws Exception {
         MultipartFile file = image.getFile("upload");
+        String path;
         if (imageLocal) {
-            paramMap = recipeService.saveImageLocal(paramMap, file);
+            path = recipeService.saveImageLocal(file);
+        } else{
+            path = awsS3Service.uploadImage(file,"/images");
         }
+        paramMap.put("url",path);
         return paramMap;
     }
     @ResponseBody

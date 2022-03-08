@@ -31,3 +31,10 @@ resource:
   path: file:///C:/Users/ywl08/resource/
 upload:
   path: /upload/**
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      auto: false
+      static: ap-northeast-1
