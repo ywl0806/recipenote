@@ -27,10 +27,10 @@ server:
 image:
   local: false
 
-resource:
-  path: file:///C:/Users/ywl08/resource/
-upload:
-  path: /upload/**
+#resource:
+#  path: file:///C:/Users/ywl08/resource/
+#upload:
+#  path: /upload/**
 
 cloud:
   aws:
