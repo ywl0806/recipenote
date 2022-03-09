@@ -7,6 +7,7 @@ import com.example.recipenote.repository.RoleRepository;
 import com.example.recipenote.repository.UserRepository;
 import com.example.recipenote.service.utils.SaveImage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -29,11 +31,18 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private final AwsS3Service awsS3Service;
+
+    @Value("${image.local}")
+    private Boolean imageLocal;
+
     private final String localResourcePath = "C:/Users/ywl08/resource/";
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, AwsS3Service awsS3Service) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.awsS3Service = awsS3Service;
     }
 
     @Transactional
@@ -62,14 +71,19 @@ public class UserService {
         }
         return new UserForm();
     }
-    public Long updateMe(UserForm form, MultipartFile avatar){
+    public Long updateMe(UserForm form, MultipartFile avatar) throws IOException {
         User user = userRepository.findByUsername(form.getEmail());
         if (user==null){
             return null;
         }
         user.setName(form.getName());
+
         if (!avatar.isEmpty()) {
-            user.setAvatarUrl(saveUserAvatar(avatar));
+            if (imageLocal) {
+                user.setAvatarUrl(saveUserAvatar(avatar));
+            }else{
+                user.setAvatarUrl(awsS3Service.uploadFiles(avatar,"avatars"));
+            }
         }
         userRepository.saveAndFlush(user);
 

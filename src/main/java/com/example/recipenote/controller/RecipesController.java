@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -98,16 +99,27 @@ public class RecipesController {
         if (imageLocal) {
             path = recipeService.saveImageLocal(file);
         } else{
-            path = awsS3Service.uploadImage(file,"/images");
+//            path = awsS3Service.uploadImage(file,"/images");
+            path = awsS3Service.uploadFiles(file,"images");
         }
         paramMap.put("url",path);
         return paramMap;
     }
     @ResponseBody
     @PostMapping("/upload-thumbnail")
-    public String uploadThumbnail(MultipartFile avatar) {
+    public String uploadThumbnail(MultipartFile avatar){
         if (!avatar.isEmpty()) {
-            return recipeService.saveThumbnailLocal(avatar);
+            if (imageLocal) {
+                return recipeService.saveThumbnailLocal(avatar);
+            } else {
+                try {
+                    return awsS3Service.uploadFiles(avatar, "thumbnails");
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+
+            }
+
         }
         return "";
     }
