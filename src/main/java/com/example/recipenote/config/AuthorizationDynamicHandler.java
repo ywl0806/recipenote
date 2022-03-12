@@ -23,7 +23,7 @@ public class AuthorizationDynamicHandler {
         this.recipeRepository = recipeRepository;
     }
 
-    public boolean checkAffiliateId(Authentication authentication,Long affiliateId ) throws Exception{
+    public boolean checkAffiliateId(Authentication authentication,Long affiliateId ) {
         Object principal = authentication.getPrincipal();
 
         if(!(principal instanceof User)){
@@ -32,7 +32,7 @@ public class AuthorizationDynamicHandler {
         UserInf user = (UserInf) principal;
         return Objects.equals(user.getAffiliateId(), affiliateId);
     }
-    public boolean checkRecipeDetailPermission(Authentication authentication, HttpServletRequest request) throws Exception{
+    public boolean checkRecipeDetailPermission(Authentication authentication, HttpServletRequest request) {
         Optional<Recipe> recipe = recipeRepository.findById(Long.valueOf(request.getParameter("id")));
         Object principal = authentication.getPrincipal();
         UserInf user = (UserInf) principal;

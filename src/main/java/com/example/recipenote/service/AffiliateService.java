@@ -4,6 +4,7 @@ import com.example.recipenote.entity.Affiliate;
 import com.example.recipenote.entity.Role;
 import com.example.recipenote.entity.User;
 import com.example.recipenote.entity.role.UserRole;
+import com.example.recipenote.form.UserForm;
 import com.example.recipenote.repository.AffiliateRepository;
 import com.example.recipenote.repository.RoleRepository;
 import com.example.recipenote.repository.UserRepository;
@@ -16,8 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AffiliateService {
@@ -49,4 +49,43 @@ public class AffiliateService {
         SecurityContextHolder.getContext().setAuthentication(reAuth);
     }
 
+    public List<UserForm> getUserList(Long id) {
+        ArrayList<User> userList = userRepository.findByAffiliateId(id);
+        if (userList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        ArrayList<UserForm> userForms = new ArrayList<>();
+        for (User user : userList) {
+            UserForm form = new UserForm();
+            form.setEmail(user.getUsername());
+            form.setName(user.getName());
+            form.setAvatarUrl(user.getAvatarUrl());
+            form.setId(user.getUserId());
+            userForms.add(form);
+        }
+        return  userForms;
+    }
+
+    public Map<String, Object> searchMember(String email) {
+        User user = userRepository.findByUsername(email);
+        if (user == null || user.getAffiliateId() != null) {
+            return new HashMap<>();
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("email",user.getUsername());
+        map.put("name",user.getName());
+        map.put("id",user.getUserId());
+        map.put("avatarUrl",user.getAvatarUrl());
+
+        return map;
+    }
+
+    public void addMember(Long affiliateId, Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        user.orElseThrow().setAffiliateId(affiliateId);
+        user.orElseThrow().addRole(roleRepository.findByName("ROLE_USER"));
+
+        userRepository.save(user.orElseThrow());
+    }
 }

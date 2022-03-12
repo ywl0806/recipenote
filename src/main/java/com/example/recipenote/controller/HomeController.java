@@ -4,11 +4,15 @@ import com.example.recipenote.entity.UserInf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 
@@ -23,17 +27,25 @@ public class HomeController {
         this.messageSource = messageSource;
     }
 
+
+    //認証済みではないユーザー、所属してないユーザー：/home
+    //認証済みの所属があるユーザー：所属する会社のホーム
     @GetMapping("/")
     public String home(Model model, Authentication authentication) {
 
         if (authentication != null) {
             UserInf user = (UserInf) authentication.getPrincipal();
-            System.out.println(authentication.getAuthorities());
             if (user.getAffiliateId() != null) {
                 model.addAttribute("affiliateId", user.getAffiliateId());
                 return "redirect:/affiliate/" + user.getAffiliateId();
             }
         }
         return "pages/home";
+    }
+
+    //接近が拒否される
+    @GetMapping(value = "/err/denied-page")
+    public String accessDenied(){
+        return "pages/denied-page";
     }
 }

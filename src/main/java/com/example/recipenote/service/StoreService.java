@@ -29,8 +29,10 @@ public class StoreService {
 
     public List<Store> getStoreList(Long affiliateId){
         if ( storeRepository.findByAffiliateId(affiliateId) == null){
-            throw new IllegalStateException("Not found affiliate");
+            throw new IllegalStateException("Not found store");
         }
         return storeRepository.findByAffiliateId(affiliateId);
     }
+
+
 }

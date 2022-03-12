@@ -8,6 +8,14 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <div class="container">
+        <div sec:authorize="hasRole('ROLE_MANAGER')">
+            <h1>관리</h1>
+            <a href="/manage-user"><h3>유저관리</h3></a>
+            <a href="/manage-store"><h3>매장관리</h3></a>
+        </div>
+
+    </div>
     <div th:replace="~{fragments/recipeList :: recipeList}"></div>
 </div>
 </body>

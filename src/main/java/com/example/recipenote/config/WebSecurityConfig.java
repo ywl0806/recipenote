@@ -1,11 +1,13 @@
 package com.example.recipenote.config;
 
 import com.example.recipenote.config.authhandler.AuthFailureHandler;
+import com.example.recipenote.config.authhandler.WebAccessDeniedHandler;
 import com.example.recipenote.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)//@PreAuthorize を使用するため
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -26,10 +29,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private final AuthorizationDynamicHandler authorizationDynamicHandler;
 
-    public WebSecurityConfig(AuthFailureHandler authFailureHandler, UserDetailsServiceImpl userDetailsService, AuthorizationDynamicHandler authorizationDynamicHandler) {
+    @Autowired
+    private final WebAccessDeniedHandler webAccessDeniedHandler;
+
+    public WebSecurityConfig(AuthFailureHandler authFailureHandler, UserDetailsServiceImpl userDetailsService, AuthorizationDynamicHandler authorizationDynamicHandler, WebAccessDeniedHandler webAccessDeniedHandler) {
         this.authFailureHandler = authFailureHandler;
         this.userDetailsService = userDetailsService;
         this.authorizationDynamicHandler = authorizationDynamicHandler;
+        this.webAccessDeniedHandler = webAccessDeniedHandler;
     }
 
     @Bean
@@ -56,9 +63,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
                     .antMatchers("/login", "/join").anonymous()
-                    .antMatchers("/affiliate/{affiliateId}/**").access("@authorizationDynamicHandler.checkAffiliateId(authentication,#affiliateId)")
-                    .antMatchers("/recipe-detail/**").access("@authorizationDynamicHandler.checkRecipeDetailPermission(authentication,request)")
-                    .anyRequest().authenticated()
+                    .antMatchers("/manage-user").hasRole("MANAGER")
+                    .antMatchers("/affiliate/{affiliateId}/**")
+                        .access("@authorizationDynamicHandler.checkAffiliateId(authentication,#affiliateId)")//ユーザーの所属をチェック
+                    .antMatchers("/recipe-detail/**")
+                        .access("@authorizationDynamicHandler.checkRecipeDetailPermission(authentication,request)")
+                .anyRequest().authenticated()
+                    .and().exceptionHandling().accessDeniedHandler(webAccessDeniedHandler)//access拒否のハンドラー　ー＞　メッセージ出力後、homeに戻す
                     .and()
                 .formLogin()
                     .loginPage("/login")

@@ -52,6 +52,7 @@ public class UserService {
         String password = userForm.getPassword();
 
         User newUser = new User(email,name,passwordEncoder.encode(password));
+        newUser.setAvatarUrl("/images/default-user-image.png");
         Role role = roleRepository.findByName("ROLE_GUEST");
         newUser.addRole(role);
         userRepository.save(newUser);

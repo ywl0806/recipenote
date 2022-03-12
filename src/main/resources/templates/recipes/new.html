@@ -5,9 +5,6 @@
       layout:decorate="~{layouts/layout}">
 
 <head>
-    <th:block layout:fragment="script">
-        <script th:src="@{ckeditor5-32.0.0/build/ckeditor.js}"></script>
-    </th:block>
     <th:block layout:fragment="css">
         <style>
             .ck-editor__editable {
@@ -192,19 +189,10 @@
         </form>
 
     </div>
+    <script src="/scripts/ckeditor.js"></script>
     <script src="/scripts/cropper.js"></script>
     <script src="/scripts/searchIngredient.js"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                simpleUpload: {
-                    uploadUrl: '/upload-image',
-                    withCredintials: true
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
         document.addEventListener('keydown', function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault();

@@ -13,6 +13,7 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {
 
+    //cookieにユーザーのlocale情報をセット
     @Bean
     public LocaleResolver localeResolver() {
         CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
@@ -21,6 +22,7 @@ public class LocaleConfig implements WebMvcConfigurer {
         return cookieLocaleResolver;
     }
 
+    //paramをインターセプターしlocale 言語を変更
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
