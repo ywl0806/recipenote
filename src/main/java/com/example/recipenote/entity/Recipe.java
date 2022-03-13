@@ -55,7 +55,7 @@ public class Recipe extends AbstractEntity {
     @JoinColumn(name = "recipeId", insertable = false, updatable = false)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "id" ,cascade = CascadeType.ALL)
     private List<AmountOfIngredient> ingredients = new ArrayList<>();
 
 

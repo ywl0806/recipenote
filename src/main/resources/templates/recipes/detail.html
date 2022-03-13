@@ -4,24 +4,59 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/layout}">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
-    <h1 th:text="${recipe.name}"></h1>
-      <div id="content">
-      </div>
-   </div>
+        <div class="row">
+            <div class="card"><h3 th:text="${recipe.name}" class="card-title"></h3>
+                <img class="card-img img-sm" th:src="${recipe.thumbnailPath}"></div>
+            <div class="col table-responsive">
+                <table class="table table-sm">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">名</th>
+                        <th scope="col">量(g)</th>
+                        <th scope="col">価格(円)</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="ingredient : ${list}">
+                        <td th:text="${ingredient.getIngredient().name}"></td>
+                        <td th:text="${ingredient.amount}"></td>
+                        <td class="price" th:text="${T(Math).round(ingredient.amount*ingredient.getIngredient().price*1000)}/1000"></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr class="table-info">
+                        <td colspan="2">Total</td>
+                        <td> <span id="total_price"></span><span>  円</span></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div id="description">
+        </div>
+        <div id="readOnly"></div>
+    </div>
     <script th:inline="javascript">
         /*<![CDATA[*/
+        var str = /*[[${recipe.content}]]*/;
+        document.getElementById('description').innerHTML = str;
+        var total = 0;
+        var price = document.querySelectorAll(".price");
+        for (var p of price){
+            total += parseFloat(p.textContent);
 
-         var str = /*[[${recipe.content}]]*/;
-        document.getElementById('content').innerHTML=str;
-
+        }
+        document.getElementById('total_price').textContent = total;
         /*]]>*/
     </script>
+    <script src="/scripts/ckeditor.js"></script>
 </div>
 </body>
 </html>

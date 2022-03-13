@@ -12,13 +12,26 @@
         <h2>Recipe List</h2>
         <div class="row">
             <div class="col-md-3" th:each="recipe : ${list}">
-                <img th:if="${recipe.thumbnailPath != null}" th:src="${recipe.thumbnailPath}" class="img-thumbnail recipe-thumbnail"/>
-                <img th:if="${recipe.thumbnailPath == null}" th:src="@{/images/nullThumbnailRecipe.jpg}" class="img-thumbnail recipe-thumbnail"/>
-                <div class="col"><a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
-                    <h3 class="title" th:text="${recipe.name}"></h3>
-                </a></div>
-                <div class="col" th:text="${recipe.storeName}"> //</div>
-                <div class="col" th:text="${recipe.userName}"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="card-link" href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
+                            <h5 class="title card-title" th:text="${recipe.name}"></h5>
+                        </a>
+                    </div>
+
+                        <img th:if="${recipe.thumbnailPath != null}" th:src="${recipe.thumbnailPath}"
+                            class="img-thumbnail recipe-thumbnail card-img"/>
+                        <img th:if="${recipe.thumbnailPath == null}" th:src="@{/images/nullThumbnailRecipe.jpg}"
+                             class="img-thumbnail recipe-thumbnail card-img"/>
+
+                        <div class="card-text"><i class="fas fa-store"></i><span class="col"
+                                                                                 th:text="${recipe.storeName}"></span>
+                        </div>
+                        <div class="card-text"><i class="fas fa-user"></i><span class="col"
+                                                                                th:text="${recipe.userName}"></span>
+                        </div>
+
+                </div>
             </div>
         </div>
     </div>

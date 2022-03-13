@@ -10153,3 +10153,7 @@ header {
 .ingredient-container {
   max-height: 350px;
 }
+
+.img-sm {
+  max-width: 200px;
+}

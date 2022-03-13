@@ -1,15 +1,16 @@
 package com.example.recipenote.controller;
 
+import com.example.recipenote.entity.AmountOfIngredient;
 import com.example.recipenote.entity.Store;
 import com.example.recipenote.entity.UserInf;
 import com.example.recipenote.form.AmountOfIngredientForm;
 import com.example.recipenote.form.RecipeForm;
 import com.example.recipenote.service.AwsS3Service;
+import com.example.recipenote.service.IngredientService;
 import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,18 +28,19 @@ import java.util.Map;
 public class RecipesController {
 
     @Autowired
-    private HttpServletRequest request;
-    @Autowired
     private final RecipeService recipeService;
     @Autowired
     private final StoreService storeService;
     @Autowired
     private final AwsS3Service awsS3Service;
+    @Autowired
+    private final IngredientService ingredientService;
 
-    public RecipesController(RecipeService recipeService, StoreService storeService, AwsS3Service awsS3Service) {
+    public RecipesController(RecipeService recipeService, StoreService storeService, AwsS3Service awsS3Service, IngredientService ingredientService) {
         this.recipeService = recipeService;
         this.storeService = storeService;
         this.awsS3Service = awsS3Service;
+        this.ingredientService = ingredientService;
     }
 
     @Value("${image.local}")
@@ -47,7 +49,10 @@ public class RecipesController {
     @GetMapping("/recipe-detail")
     public String detail(Model model, Authentication authentication, @RequestParam Long id) {
         RecipeForm recipe = recipeService.getRecipe(id);
+        List<AmountOfIngredient> list = ingredientService.getIngredientList(id);
+
         model.addAttribute("recipe", recipe);
+        model.addAttribute("list",list);
         return "recipes/detail";
     }
 

@@ -1,5 +1,6 @@
 package com.example.recipenote.service;
 
+import com.example.recipenote.config.authhandler.WebAccessDeniedHandler;
 import com.example.recipenote.entity.*;
 import com.example.recipenote.form.AmountOfIngredientForm;
 import com.example.recipenote.form.RecipeForm;
@@ -8,6 +9,8 @@ import com.example.recipenote.repository.IngredientRepository;
 import com.example.recipenote.repository.RecipeRepository;
 import com.example.recipenote.repository.UserRepository;
 import com.example.recipenote.service.utils.SaveImage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +21,7 @@ import java.util.*;
 @Service
 public class RecipeService {
 
+
     @Autowired
     private final RecipeRepository recipeRepository;
     @Autowired
@@ -27,6 +31,9 @@ public class RecipeService {
     @Autowired
     private final IngredientRepository ingredientRepository;
     private static String localResourcePath = "C:/Users/ywl08/resource/";
+
+    private static final Logger logger = LoggerFactory.getLogger(RecipeService.class);
+
 
     public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository, AmountOfIngredientRepository amountOfIngredientRepository, IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
@@ -49,16 +56,16 @@ public class RecipeService {
 
         for (AmountOfIngredientForm amountForm : form.getIngredients()){
             if (amountForm.getIngredientId() != null){
+                logger.info(amountForm.toString());
                 Ingredient ingredient = ingredientRepository.getById(amountForm.getIngredientId());
                 AmountOfIngredient amount = new AmountOfIngredient();
                 amount.setAmount(amountForm.getAmount());
                 amount.setIngredient(ingredient);
-                amountOfIngredientRepository.save(amount);
-                recipe.addIngredient(amount);
+                recipe.addIngredient(amountOfIngredientRepository.saveAndFlush(amount));
             }
         }
 
-        recipeRepository.save(recipe);
+        recipeRepository.saveAndFlush(recipe);
     }
 
     public RecipeForm getRecipe(Long id) {
@@ -68,6 +75,7 @@ public class RecipeService {
                 .name(entity.getName())
                 .content(entity.getContent())
                 .isPublic(entity.getIsPublic())
+                .thumbnailPath(entity.getThumbnailPath())
                 .build();
     }
 

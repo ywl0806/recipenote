@@ -1,14 +1,15 @@
 package com.example.recipenote.service;
 
+import com.example.recipenote.entity.AmountOfIngredient;
 import com.example.recipenote.entity.Ingredient;
+import com.example.recipenote.repository.AmountOfIngredientRepository;
 import com.example.recipenote.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,8 +19,12 @@ public class IngredientService {
     @Autowired
     private final IngredientRepository ingredientRepository;
 
-    public IngredientService(IngredientRepository ingredientRepository) {
+    @Autowired
+    private final AmountOfIngredientRepository amountOfIngredientRepository;
+
+    public IngredientService(IngredientRepository ingredientRepository, AmountOfIngredientRepository amountOfIngredientRepository) {
         this.ingredientRepository = ingredientRepository;
+        this.amountOfIngredientRepository = amountOfIngredientRepository;
     }
 
     @Transactional
@@ -36,6 +41,14 @@ public class IngredientService {
 
         return ingredientRepository.findByNameContaining(keyword,request);
 
+    }
+
+    public List<AmountOfIngredient> getIngredientList(Long recipeId) {
+        List<AmountOfIngredient> list = amountOfIngredientRepository.findByRecipeId(recipeId);
+        if (list.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return list;
     }
 
 
