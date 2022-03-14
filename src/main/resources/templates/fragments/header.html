@@ -14,7 +14,7 @@
 <body>
 <header layout:fragment="headerFragment">
     <!--        <div class="container-fluid">-->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,36 +33,61 @@
                     </li>
                 </th:block>
             </ul>
-
-            <div class="mx-auto"><a class="navbar-brand" th:href="@{/}">
-                <i class="fa-solid fa-blender"></i>  RECIPE NOTE</a>
-            </div>
-            <div class="dropdown mx-auto">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-expanded="false">
-                    <th:block sec:authorize="isAuthenticated()">
-                        <img th:if="${#authentication.principal.avatarUrl == null}"
-                             class="img-thumbnail header-avatar"
-                             th:src="@{/images/default-user-image.png}" src=""/>
-                        <img th:if="${#authentication.principal.avatarUrl != null}"
-                             class="img-thumbnail header-avatar"
-                             th:src="${#authentication.principal.avatarUrl}" src=""/>
-                    </th:block>
-                </button>
-                <div class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <th:block sec:authorize="isAuthenticated()">
-                            <a class="dropdown-item" th:href="@{/me}">PROFILE</a>
-                            <a class="dropdown-item" th:href="@{/logout}" data-method="post">LOGOUT</a>
-                        </th:block>
-                        <th:block sec:authorize="!isAuthenticated()">
-                            <a class="dropdown-item" th:href="@{/login}">LOGIN</a>
-                            <a class="dropdown-item" th:href="@{/join}">JOIN</a>
-                        </th:block>
-                    </div>
-                </div>
-            </div>
         </div>
+        <div class="mx-auto"><a class="navbar-brand justify-content-center" th:href="@{/}">
+            <i class="fa-solid fa-blender"></i> RECIPE NOTE</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarSupportedContent2"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <th:block sec:authorize="isAuthenticated()">
+                <img th:if="${#authentication.principal.avatarUrl == null}"
+                     class="img-thumbnail header-avatar"
+                     th:src="@{/images/default-user-image.png}" src=""/>
+                <img th:if="${#authentication.principal.avatarUrl != null}"
+                     class="img-thumbnail header-avatar"
+                     th:src="${#authentication.principal.avatarUrl}" src=""/>
+            </th:block>
+            <th:block sec:authorize="!isAuthenticated()">
+                <img class="img-thumbnail header-avatar"
+                     th:src="@{/images/default-user-image.png}" src=""/>
+            </th:block>
+        </button>
+        <div class="collapse navbar-collapse mx-auto navbarSupportedContent2 justify-content-end">
+                <form sec:authorize="isAuthenticated()" class="form-inline" th:action="@{/search}">
+                    <input class="form-control" type="search" placeholder="Search" name="keyword">
+                    <button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <div class="collapse navbar-collapse mx-auto navbarSupportedContent2 justify-content-end" >
+                <th:block sec:authorize="!isAuthenticated()">
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/login}">LOGIN</a>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/join}">JOIN</a></li>
+                    </ul>
+                </th:block>
+                <th:block sec:authorize="isAuthenticated()">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-expanded="false">
+                            <img th:if="${#authentication.principal.avatarUrl == null}"
+                                 class="img-thumbnail header-avatar"
+                                 th:src="@{/images/default-user-image.png}" src=""/>
+                            <img th:if="${#authentication.principal.avatarUrl != null}"
+                                 class="img-thumbnail header-avatar"
+                                 th:src="${#authentication.principal.avatarUrl}" src=""/>
+                        </button>
+                        <div class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" th:href="@{/me}">PROFILE</a>
+                                <a class="dropdown-item" th:href="@{/logout}" data-method="post">LOGOUT</a>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+        </div>
+
+
     </nav>
     <!--        </div>-->
 

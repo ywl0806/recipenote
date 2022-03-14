@@ -1,6 +1,7 @@
 package com.example.recipenote.controller;
 
 import com.example.recipenote.entity.AmountOfIngredient;
+import com.example.recipenote.entity.Recipe;
 import com.example.recipenote.entity.Store;
 import com.example.recipenote.entity.UserInf;
 import com.example.recipenote.form.AmountOfIngredientForm;
@@ -11,17 +12,23 @@ import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Controller
@@ -52,15 +59,24 @@ public class RecipesController {
         List<AmountOfIngredient> list = ingredientService.getIngredientList(id);
 
         model.addAttribute("recipe", recipe);
-        model.addAttribute("list",list);
+        model.addAttribute("list", list);
         return "recipes/detail";
     }
 
     @GetMapping("/recipes")
-    public String index(Model model, Authentication authentication) {
+    public String index(Model model, @RequestParam(defaultValue = "0", name = "page", required = false) int page) {
+//        Set<Recipe> recipes = recipeService.searchRecipe("파");
+//        for (Recipe recipe : recipes) {
+//            if (recipe != null){
+//                System.out.println("레시피  " + recipe.getName());
+//            }
+//        }
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Page<Recipe> pageList = recipeService.getAllPublicRecipeList(pageable);
+        int totalPage = pageList.getTotalPages();
 
-        List<RecipeForm> list = recipeService.getAllPublicRecipeList();
-        model.addAttribute("list", list);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("list", pageList.getContent());
         return "recipes/index";
     }
 
@@ -105,23 +121,24 @@ public class RecipesController {
         String path;
         if (imageLocal) {
             path = recipeService.saveImageLocal(file);
-        } else{
+        } else {
 //            path = awsS3Service.uploadImage(file,"/images");
-            path = awsS3Service.uploadFiles(file,"images");
+            path = awsS3Service.uploadFiles(file, "images");
         }
-        paramMap.put("url",path);
+        paramMap.put("url", path);
         return paramMap;
     }
+
     @ResponseBody
     @PostMapping("/upload-thumbnail")
-    public String uploadThumbnail(MultipartFile avatar){
+    public String uploadThumbnail(MultipartFile avatar) {
         if (!avatar.isEmpty()) {
             if (imageLocal) {
                 return recipeService.saveThumbnailLocal(avatar);
             } else {
                 try {
                     return awsS3Service.uploadFiles(avatar, "thumbnails");
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
@@ -129,5 +146,15 @@ public class RecipesController {
 
         }
         return "";
+    }
+
+    @GetMapping("/search")
+    public String searchRecipe(Model model, @RequestParam(name = "keyword", required = false) String keyword, @RequestParam(defaultValue = "0", name = "page", required = false) int page) {
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Page<Recipe> pageList = recipeService.searchRecipe(keyword, pageable);
+
+        model.addAttribute("totalPage", pageList.getTotalPages());
+        model.addAttribute("list", pageList.getContent());
+        return  "recipes/index";
     }
 }

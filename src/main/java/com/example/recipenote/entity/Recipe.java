@@ -39,15 +39,15 @@ public class Recipe extends AbstractEntity {
     @Column(nullable = false)
     private Boolean isPublic;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "affiliateId", insertable = false, updatable = false)
     private Affiliate affiliate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "storeId", insertable = false, updatable = false)
     private Store store;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 

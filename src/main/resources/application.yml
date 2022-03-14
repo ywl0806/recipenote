@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
     generate-ddl: true
     properties:
@@ -17,7 +17,7 @@ spring:
     password: password
   sql:
     init:
-      mode: never
+      mode: embedded
 
 server:
   servlet:

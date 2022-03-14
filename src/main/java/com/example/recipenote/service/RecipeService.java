@@ -1,6 +1,6 @@
 package com.example.recipenote.service;
 
-import com.example.recipenote.config.authhandler.WebAccessDeniedHandler;
+
 import com.example.recipenote.entity.*;
 import com.example.recipenote.form.AmountOfIngredientForm;
 import com.example.recipenote.form.RecipeForm;
@@ -12,6 +12,10 @@ import com.example.recipenote.service.utils.SaveImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,12 +54,12 @@ public class RecipeService {
         recipe.setIsPublic(form.getIsPublic());
         recipe.setAffiliateId(form.getAffiliateId());
         recipe.setStoreId(form.getStoreId());
-        if (!Objects.equals(form.getThumbnailPath(), "")){
+        if (!Objects.equals(form.getThumbnailPath(), "")) {
             recipe.setThumbnailPath(form.getThumbnailPath());
         }
 
-        for (AmountOfIngredientForm amountForm : form.getIngredients()){
-            if (amountForm.getIngredientId() != null){
+        for (AmountOfIngredientForm amountForm : form.getIngredients()) {
+            if (amountForm.getIngredientId() != null) {
                 logger.info(amountForm.toString());
                 Ingredient ingredient = ingredientRepository.getById(amountForm.getIngredientId());
                 AmountOfIngredient amount = new AmountOfIngredient();
@@ -80,20 +84,20 @@ public class RecipeService {
     }
 
     //      公開されたrecipe
-    public List<RecipeForm> getAllPublicRecipeList() {
-        List<Recipe> list;
-        list = recipeRepository.findByIsPublicTrue();
+    public Page<Recipe> getAllPublicRecipeList(Pageable pageable) {
+        Page<Recipe> page = recipeRepository.findByIsPublicTrue(pageable);
 
-        return mappingRecipeList(list);
+
+        return page;
     }
 
-    public List<RecipeForm> getPersonalRecipes(Long targetId, UserInf userInf) throws Exception{
+    public List<RecipeForm> getPersonalRecipes(Long targetId, UserInf userInf) throws Exception {
         Optional<User> targetUser = userRepository.findById(targetId);
         List<Recipe> list;
-        if (targetUser.isPresent()){
+        if (targetUser.isPresent()) {
             UserInf tUser = targetUser.get();
 
-            if (Objects.equals(tUser.getAffiliateId(), userInf.getAffiliateId())){
+            if (Objects.equals(tUser.getAffiliateId(), userInf.getAffiliateId())) {
                 list = recipeRepository.findByUserId(tUser.getUserId());
                 return mappingRecipeList(list);
             }
@@ -105,40 +109,44 @@ public class RecipeService {
     }
 
     //    会社のrecipe
-    public List<RecipeForm> getNotPublicRecipeList(Long id) {
-        List<Recipe> list;
-        list = recipeRepository.findByAffiliateId(id);
-        return mappingRecipeList(list);
+    public Page<Recipe> getNotPublicRecipeList(Long id, Pageable pageable) {
+        Page<Recipe>list = recipeRepository.findByAffiliateId(id,pageable);
+
+        return list;
     }
 
-    public String saveThumbnailLocal(MultipartFile image){
+    public String saveThumbnailLocal(MultipartFile image) {
 
-        return SaveImage.saveThumbnail(image,"/thumbnails",400,400);
+        return SaveImage.saveThumbnail(image, "/thumbnails", 400, 400);
     }
 
     public String saveImageLocal(MultipartFile image) throws IOException {
-        String path = SaveImage.saveImage(image,"/images");
-
-
+        String path = SaveImage.saveImage(image, "/images");
         return path;
     }
-        public List<RecipeForm> mappingRecipeList (List < Recipe > list) {
-            List<RecipeForm> recipeForms = new ArrayList<RecipeForm>();
-            for (Recipe entity : list) {
-                RecipeForm form = RecipeForm.builder()
-                        .id(entity.getId())
-                        .name(entity.getName())
-                        .userName(entity.getUser().getName())
-                        .thumbnailPath(entity.getThumbnailPath())
-                        .build();
-                recipeForms.add(form);
 
-                if (entity.getStoreId() != null) {
-                    form.setStoreName(entity.getStore().getName());
-                }
+    public List<RecipeForm> mappingRecipeList(List<Recipe> list) {
+        List<RecipeForm> recipeForms = new ArrayList<RecipeForm>();
+        for (Recipe entity : list) {
+            RecipeForm form = RecipeForm.builder()
+                    .id(entity.getId())
+                    .name(entity.getName())
+                    .userName(entity.getUser().getName())
+                    .thumbnailPath(entity.getThumbnailPath())
+                    .build();
+            recipeForms.add(form);
 
+            if (entity.getStoreId() != null) {
+                form.setStoreName(entity.getStore().getName());
             }
-            return recipeForms;
-        }
 
+        }
+        return recipeForms;
     }
+
+    //材料name、レシピnameでレシピを検索
+    public Page<Recipe> searchRecipe(String keyword,Pageable pageable) {
+
+        return recipeRepository.findByKeyword(keyword, pageable);
+    }
+}

@@ -19,21 +19,34 @@
                         </a>
                     </div>
 
-                        <img th:if="${recipe.thumbnailPath != null}" th:src="${recipe.thumbnailPath}"
-                            class="img-thumbnail recipe-thumbnail card-img"/>
-                        <img th:if="${recipe.thumbnailPath == null}" th:src="@{/images/nullThumbnailRecipe.jpg}"
-                             class="img-thumbnail recipe-thumbnail card-img"/>
+                    <img th:if="${recipe.thumbnailPath != null}" th:src="${recipe.thumbnailPath}"
+                         class="img-thumbnail recipe-thumbnail card-img"/>
+                    <img th:if="${recipe.thumbnailPath == null}" th:src="@{/images/nullThumbnailRecipe.jpg}"
+                         class="img-thumbnail recipe-thumbnail card-img"/>
 
-                        <div class="card-text"><i class="fas fa-store"></i><span class="col"
-                                                                                 th:text="${recipe.storeName}"></span>
-                        </div>
-                        <div class="card-text"><i class="fas fa-user"></i><span class="col"
-                                                                                th:text="${recipe.userName}"></span>
-                        </div>
+                    <div class="card-text"><i class="fas fa-store"></i><span class="col"
+                                                                             th:if="${recipe.getStore() != null}"
+                                                                             th:text="${recipe.getStore().name}"></span>
+                    </div>
+                    <div class="card-text"><i class="fas fa-user"></i><span class="col"
+                                                                            th:if="${recipe.getUser() != null}"
+                                                                            th:text="${recipe.getUser().name}"></span>
+                    </div>
 
                 </div>
             </div>
+
         </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPage -1)}">
+                    <a class="page-link" th:href="@{/recipes(page=${pageStat.index})}"
+                       th:text="${pageStat.index + 1}"></a>
+                </li>
+            </ul>
+        </nav>
+
     </div>
 
 </div>

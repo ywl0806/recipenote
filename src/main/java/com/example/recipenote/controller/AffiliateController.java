@@ -1,6 +1,7 @@
 package com.example.recipenote.controller;
 
 import com.example.recipenote.entity.Affiliate;
+import com.example.recipenote.entity.Recipe;
 import com.example.recipenote.entity.Store;
 import com.example.recipenote.entity.UserInf;
 import com.example.recipenote.form.RecipeForm;
@@ -9,6 +10,10 @@ import com.example.recipenote.service.AffiliateService;
 import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -51,9 +56,12 @@ public class AffiliateController {
 
 
     @GetMapping("/affiliate/{id}")
-    public String index(Model model, @PathVariable Long id) {
-        List<RecipeForm> list = recipeService.getNotPublicRecipeList(id);
-        model.addAttribute("list", list);
+    public String index(Model model, @PathVariable Long id,@RequestParam(defaultValue = "0", name = "page", required = false) int page) {
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Page<Recipe> list = recipeService.getNotPublicRecipeList(id,pageable);
+
+        model.addAttribute("totalPage",list.getTotalPages());
+        model.addAttribute("list", list.getContent());
         return "affiliates/index";
     }
 
