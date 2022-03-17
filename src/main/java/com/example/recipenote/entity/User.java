@@ -47,7 +47,7 @@ public class User extends AbstractEntity implements UserDetails ,UserInf{
     @Column(nullable = false)
     private  Boolean enabled = true;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "affiliateId",insertable = false, updatable = false)
     private Affiliate affiliate;
 

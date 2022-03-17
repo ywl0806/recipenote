@@ -14,7 +14,7 @@ public class AmountOfIngredient {
     private Long id;
 
     @Column
-    private Double amount;
+    private Double amount = 0.0;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id")

@@ -7,8 +7,11 @@ import com.example.recipenote.entity.UserInf;
 import com.example.recipenote.form.RecipeForm;
 import com.example.recipenote.form.UserForm;
 import com.example.recipenote.service.AffiliateService;
+import com.example.recipenote.service.CustomOidcUserService;
 import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +28,8 @@ import java.util.Map;
 
 @Controller
 public class AffiliateController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AffiliateController.class);
 
     @Autowired
     private final AffiliateService affiliateService;
@@ -49,6 +54,7 @@ public class AffiliateController {
     @PostMapping("/new-affiliate")
     public String newAffiliate(Model model, @ModelAttribute("affiliate") Affiliate affiliate, Authentication authentication) {
         UserInf user = (UserInf) authentication.getPrincipal();
+        logger.info("userInf : " + user.toString());
         affiliateService.createAffiliate(affiliate, user.getUsername());
 
         return "redirect:/create-store";

@@ -8,4 +8,6 @@ public interface UserInf {
     Long getAffiliateId();
 
     String getName();
+
+    String getAvatarUrl();
 }

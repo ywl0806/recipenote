@@ -36,9 +36,9 @@ public class AffiliateService {
 
     public void createAffiliate(Affiliate affiliate, String username) {
         User user = userRepository.findByUsername(username);
-        affiliateRepository.save(affiliate);
+        affiliate = affiliateRepository.save(affiliate);
 //        ユーザーにroleを追加
-        user.setAffiliateId(affiliateRepository.findByName(affiliate.getName()).getId());
+        user.setAffiliateId(affiliate.getId());
         Role roleManager = roleRepository.findByName("ROLE_MANAGER");
         Role roleUser = roleRepository.findByName("ROLE_USER");
         user.addRole(roleManager);
