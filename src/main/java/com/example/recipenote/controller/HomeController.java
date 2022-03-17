@@ -32,7 +32,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model, Authentication authentication) {
 
-        if (authentication.isAuthenticated()) {
+        if (authentication !=null) {
             UserInf user = (UserInf) authentication.getPrincipal();
             if (user.getAffiliateId() != null) {
                 model.addAttribute("affiliateId", user.getAffiliateId());
