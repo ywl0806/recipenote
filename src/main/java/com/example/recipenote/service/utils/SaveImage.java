@@ -45,7 +45,7 @@ public final class SaveImage {
         String realDir = localResourcePath + imagePath + "/" + uploadId; //実際のPath
 
         try {
-            //imageを 400*400サイズでscaling
+            //imageを scaling
             InputStream inputStream = image.getInputStream();
             BufferedImage bufferedImage = ImageIO.read(inputStream);
             BufferedImage thumbnailImage = Thumbnails.of(bufferedImage).size(width,height).outputQuality(1.0f).asBufferedImage();

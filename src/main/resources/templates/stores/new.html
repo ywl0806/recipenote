@@ -6,27 +6,201 @@
         layout:decorate="~{layouts/layout}"
 >
 <head>
+    <th:block layout:fragment="css">
+        <style>
+            .map {
+                height: 100%;
+                min-height: 300px;
+                max-height: 500px;
+                min-width: 400px;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .controls {
+                background-color: #fff;
+                border-radius: 2px;
+                border: 1px solid transparent;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+                box-sizing: border-box;
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+                height: 29px;
+                margin-left: 17px;
+                margin-top: 10px;
+                outline: none;
+                padding: 0 11px 0 13px;
+                text-overflow: ellipsis;
+                width: 400px;
+            }
+
+            .controls:focus {
+                border-color: #4d90fe;
+            }
+
+            .title {
+                font-weight: bold;
+            }
+
+            #infowindow-content {
+                display: none;
+            }
+
+            #map #infowindow-content {
+                display: inline;
+            }
+
+
+        </style>
+    </th:block>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container form-container">
         <div class="row">
             <div class="col-md-6 form_area">
-                <h1>CREATE STORE</h1>
-                <form th:object="${store}" th:action="@{new-store}" method="post">
+                <h1 th:text="#{stores.new.createStore}">CREATE STORE</h1>
+                <form th:object="${store}" th:action="@{/new-store}" method="post">
                     <div class="form-group">
-                        <input class="form-control" type="text" id="name" th:field="*{name}" placeholder="Store Name">
+                        <label class="label image-wrapper" data-toggle="tooltip" title="Thumbnail Image">
+                            <img class="rounded profile-pic" id="avatar" th:src="@{/images/null-store-logo.png}"
+                                 alt="avatar">
+                            <div class="upload-button">
+                                <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                            </div>
+                            <input type="file" class="sr-only file-upload" id="input" name="image" accept="image/*">
+                        </label>
+
+                        <div class="alert img-upload-alert" role="alert"></div>
+                        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="img-container">
+                                            <img id="image" th:src="@{/images/nullThumbnailRecipe.png}">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="image-path" th:field="*{logoUrl}">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" id="description" th:field="*{description}" placeholder="店舗を紹介してください。">
+                        <input class="form-control" type="text" id="name" th:field="*{name}" th:placeholder="#{stores.new.StroeName}">
                     </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="description" th:field="*{description}"
+                               th:placeholder="#{store.new.description}">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="place_name" th:placeholder="#{stores.new.placeholderName}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="place_address" th:placeholder="#{stores.new.placeholderAddress}" readonly>
+                    </div>
+                    <input type="hidden" th:field="*{placeId}" id="place_id">
                     <div class="form-group">
                         <input class="btnSubmit" type="submit" value="Submit">
                     </div>
                 </form>
+                <div class="map-wrapper justify-content-center">
+                    <div style="display: none">
+                        <input
+                                id="pac-input"
+                                class="controls"
+                                type="text"
+                                placeholder="Enter a location"
+                        />
+                    </div>
+                    <div id="map" class="map row"></div>
+                    <div id="infowindow-content">
+                        <span id="place-name" class="title"></span><br/>
+                        <span id="place-address"></span>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
+
+    <script th:src="|https://maps.googleapis.com/maps/api/js?key=${@environment.getProperty('googlemap.key')}&callback=initMap&libraries=places&v=weekly|" async></script>
+    <script>
+        const inputId = document.getElementById("place_id");
+        const inputName = document.getElementById("place_name");
+        const inputAddress = document.getElementById("place_address");
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: {lat: -33.8688, lng: 151.2195},
+                zoom: 13,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false,
+
+            });
+            const input = document.getElementById("pac-input");
+            // Specify just the place data fields that you need.
+            const autocomplete = new google.maps.places.Autocomplete(input, {
+                fields: ["place_id", "geometry", "formatted_address", "name"],
+            });
+
+            autocomplete.bindTo("bounds", map);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            const infowindow = new google.maps.InfoWindow();
+            const infowindowContent = document.getElementById("infowindow-content");
+
+            infowindow.setContent(infowindowContent);
+
+            const marker = new google.maps.Marker({map: map});
+
+            marker.addListener("click", () => {
+                infowindow.open(map, marker);
+            });
+            autocomplete.addListener("place_changed", () => {
+                infowindow.close();
+
+                const place = autocomplete.getPlace();
+
+                if (!place.geometry || !place.geometry.location) {
+                    return;
+                }
+
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                }
+
+                // Set the position of the marker using the place ID and location.
+                marker.setPlace({
+                    placeId: place.place_id,
+                    location: place.geometry.location,
+                });
+                marker.setVisible(true);
+                infowindowContent.children.namedItem("place-name").textContent = place.name;
+                infowindowContent.children.namedItem("place-address").textContent = place.formatted_address;
+                infowindow.open(map, marker);
+                inputId.value = place.place_id;
+                inputName.value = place.name;
+                inputAddress.value = place.formatted_address;
+            });
+        }
+    </script>
+    <script src="/scripts/cropper.js"></script>
+
 </div>
 </body>
 </html>

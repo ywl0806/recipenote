@@ -62,6 +62,8 @@ cloud:
     region:
       auto: false
       static: ap-northeast-1
+googlemap:
+  key: ${googlemap.key}
 #logging:
 #  level:
 #    com:

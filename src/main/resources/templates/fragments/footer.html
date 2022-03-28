@@ -7,14 +7,24 @@
 </head>
 <body>
     <footer layout:fragment = "footerFragment">
-        <div class="container-fluid">
+        <div class="container">
                 <hr>
             <div class="row text-center">
                 <div class = "col">
                 <span id="footer__text"></span>
                 <span>  &copy;</span>
                 </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" th:text="#{footer.lang}"
+                            type="button" data-toggle="dropdown" aria-expanded="false"></button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" th:href="@{/(lang=en)}">English</a>
+                        <a class="dropdown-item" th:href="@{/(lang=ja)}">日本語</a>
+                        <a class="dropdown-item" th:href="@{/(lang=ko)}">한국어</a>
+                    </div>
+                </div>
             </div>
+
         </div>
         <script>
             var footerText = document.getElementById("footer__text");

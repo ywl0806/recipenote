@@ -18,25 +18,39 @@
 <div layout:fragment="content">
     <div class="container">
 
-        <h3>유저관리</h3>
+        <h3 th:text="#{affiliate.manage-user}">유저관리</h3>
 
         <div class="container">
-            <h3>유저 리스트</h3>
-            <ul class="list-group list-group-horizontal user-list" th:if="${!#lists.isEmpty(list)}"
-                th:each="user : ${list}">
-                <li class="list-group-item"><img class="img-thumbnail" th:src="${user.avatarUrl}" alt=""></li>
-                <li class="list-group-item"><span th:text="${user.name}"></span></li>
-                <li class="list-group-item"><span th:text="${user.email}"></span></li>
-            </ul>
+            <h3 th:text="#{affiliates.manage-user.userList}">유저 리스트</h3>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr class="user-list" th:if="${!#lists.isEmpty(list)}"
+                    th:each="user : ${list}">
+                    <td><img class="img-thumbnail" th:src="${user.avatarUrl}" alt=""></td>
+                    <td><span th:text="${user.name}"></span></td>
+                    <td><span th:text="${user.email}"></span></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <div class="container">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                맴버를 추가
+            <button class="btn btn-primary" type="button" data-toggle="collapse"
+                    data-target="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample"
+                    th:text="#{affiliates.manage-user.addMember}">
+
             </button>
             <div class="collapse" id="collapseExample">
                 <div class="card card-body">
                     <form th:action="@{/new-member}" method="get">
-                        <input class="form-control" type="text" id="search-modal" placeholder="유저를 검색" required>
+                        <input class="form-control" type="text" id="search-modal" th:placeholder="#{affiliates.manage-user.search}" required>
                         <div id="member-info">
                             <div class="form-group">
                                 <div class="image-wrapper avatar-wrapper">
@@ -53,13 +67,13 @@
                             </div>
                         </div>
                         <input type="hidden" name="memberId" id="member_id">
-                        <input type="submit" class="btn-outline-primary">
+                        <input type="submit" class="btn-primary" th:value="#{affiliate.manage-user.submit}" >
                         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
                              aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="modalLabel">유저 검색</h5>
+                                        <h5 class="modal-title" id="modalLabel" th:text="#{affiliates.manage-user.search}">유저 검색</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>

@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-auto">
                     <label class="label image-wrapper" data-toggle="tooltip" title="Thumbnail Image">
-                        <img class="rounded profile-pic" id="avatar" th:src="@{/images/nullThumbnailRecipe.jpg}"
+                        <img class="rounded profile-pic" id="avatar" th:src="@{/images/nullThumbnailRecipe.png}"
                              alt="avatar">
                         <div class="upload-button">
                             <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="img-container">
-                                        <img id="image" th:src="@{/images/nullThumbnailRecipe.jpg}">
+                                        <img id="image" th:src="@{/images/nullThumbnailRecipe.png}">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -82,7 +82,7 @@
                         <tfoot class="fixed-table">
                         <tr class="table-info">
                             <td colspan="3">Total</td>
-                            <td ><span th:id="total_price"></span><span>  円</span></td>
+                            <td><span th:id="total_price"></span><span>  円</span></td>
                         </tr>
                         </tfoot>
                     </table>
@@ -173,18 +173,20 @@
                 </div>
                 <div class="row">
                     <h4>Store</h4>
-                    <div class="col-md-2 btn-group btn-group-toggle" data-toggle="buttons"
-                         th:each="store : ${storeList}">
-                        <label class="btn btn-secondary" for="${store.id}"><span th:text="${store.name}"></span>
-                            <input type="radio" name="options" th:value="${store.id}" id="${store.id}"
-                                   th:field="*{storeId}"></label>
+                    <div class="col">
+                        <div class="form-check form-check-inline" th:each="store : ${storeList}">
+                            <input class="form-check-input" type="radio" th:value="${store.id}"
+                                   th:id="|store_${store.id}|" th:field="*{storeId}">
+                            <label class="form-check-label" th:for="|store_${store.id}|"
+                                   th:text="${store.name}"></label>
+                        </div>
                     </div>
                 </div>
 
             </th:block>
-            <div class="row" style="float: none;">
+            <div class="row">
                 <input class="col-md-3 btnSubmit" type="submit" value="submit"
-                       style="float: none; margin:0 auto;">
+                       style="margin:0 auto;">
             </div>
         </form>
 

@@ -6,38 +6,38 @@
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
-    <meta charset="UTF-8">
     <th:block layout:fragment="css">
+        <style>
 
+        </style>
     </th:block>
 </head>
 <body>
 <header layout:fragment="headerFragment">
-    <!--        <div class="container-fluid">-->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    <nav class="navbar navbar-expand-sm">
+        <button class="navbar-toggler navbar-light" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse mx-auto" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse justify-content-start" id="navbarSupportedContent">
             <ul class="navbar-nav justify-content-start">
                 <th:block sec:authorize="isAuthenticated()">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/recipes}">RECIPES</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/new-recipe}">CREATE-RECIPE</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/recipes}" th:text="#{header.recipes}">RECIPES</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/new-recipe}" th:text="#{header.create-recipe}">CREATE-RECIPE</a></li>
                     <li class="nav-item" sec:authorize="!hasRole('ROLE_USER')">
                         <a class="nav-link" th:href="@{/create-affiliate}">CREATE-COMPANY</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_MANAGER')">
-                        <a class="nav-link" th:href="@{/create-store}">CREATE-STORE</a>
                     </li>
                 </th:block>
             </ul>
         </div>
-        <div class="mx-auto"><a class="navbar-brand justify-content-center" th:href="@{/}">
+
+        <a class="navbar-brand justify-content-center" th:href="@{/}">
             <i class="fa-solid fa-blender"></i> RECIPE NOTE</a>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarSupportedContent2"
+
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target=".navbarSupportedContent2"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <th:block sec:authorize="isAuthenticated()">
                 <img th:if="${#authentication.principal.avatarUrl == null}"
@@ -52,44 +52,52 @@
                      th:src="@{/images/default-user-image.png}" src=""/>
             </th:block>
         </button>
-        <div class="collapse navbar-collapse mx-auto navbarSupportedContent2 justify-content-end">
-                <form sec:authorize="isAuthenticated()" class="form-inline" th:action="@{/search}">
-                    <input class="form-control" type="search" placeholder="Search" name="keyword">
-                    <button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
-                </form>
-            </div>
-            <div class="collapse navbar-collapse mx-auto navbarSupportedContent2 justify-content-end" >
-                <th:block sec:authorize="!isAuthenticated()">
-                    <ul class="navbar-nav justify-content-end">
-                        <li class="nav-item"><a class="nav-link" th:href="@{/login}">LOGIN</a>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/join}">JOIN</a></li>
-                    </ul>
-                </th:block>
-                <th:block sec:authorize="isAuthenticated()">
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-expanded="false">
-                            <img th:if="${#authentication.principal.avatarUrl == null}"
-                                 class="img-thumbnail header-avatar"
-                                 th:src="@{/images/default-user-image.png}" src=""/>
-                            <img th:if="${#authentication.principal.avatarUrl != null}"
-                                 class="img-thumbnail header-avatar"
-                                 th:src="${#authentication.principal.avatarUrl}" src=""/>
-                        </button>
-                        <div class="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" th:href="@{/me}">PROFILE</a>
-                                <a class="dropdown-item" th:href="@{/logout}" data-method="post">LOGOUT</a>
+        <div class="collapse navbar-collapse navbarSupportedContent2 justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item align-self-center">
+                    <form sec:authorize="isAuthenticated()" class="form-inline" th:action="@{/search}">
+                        <div class="form-group"><input class="form-control" type="search" placeholder="Search"
+                                                       name="keyword"></div>
+                        <div class="form-group">
+                            <button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+                </li>
+                <li class="nav-item align-self-center">
+                    <th:block sec:authorize="!isAuthenticated()">
+                        <ul class="navbar-nav justify-content-end">
+                            <li class="nav-item"><a class="nav-link" th:href="@{/login}"
+                                                    th:text="#{header.login}">LOGIN</a>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/join}"
+                                                    th:text="#{header.join}">JOIN</a>
+                            </li>
+                        </ul>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <div class="dropdown mg-right">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-expanded="false">
+                                <img th:if="${#authentication.principal.avatarUrl == null}"
+                                     class="img-thumbnail header-avatar"
+                                     th:src="@{/images/default-user-image.png}" src=""/>
+                                <img th:if="${#authentication.principal.avatarUrl != null}"
+                                     class="img-thumbnail header-avatar"
+                                     th:src="${#authentication.principal.avatarUrl}" src=""/>
+                            </button>
+                            <div class="navbar-nav mr-auto mt-2 mt-lg-0">
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" th:href="@{/me}" th:text="#{header.profile}">PROFILE</a>
+                                    <a class="dropdown-item" th:href="@{/logout}" data-method="post" th:text="#{header.logout}">LOGOUT</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </th:block>
-
+                    </th:block>
+                </li>
+            </ul>
         </div>
 
 
     </nav>
-    <!--        </div>-->
 
 </header>
 </body>

@@ -31,4 +31,10 @@ public class Store extends AbstractEntity {
 
     @Column
     private String description;
+
+    @Column
+    private String placeId;
+
+    @Column
+    private String logoUrl;
 }

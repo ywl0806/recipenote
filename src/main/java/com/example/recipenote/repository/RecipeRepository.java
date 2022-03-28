@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Page<Recipe> findByIsPublicTrue(Pageable pageable);
+    Page<Recipe> findByStoreIdAndIsPublicTrue(Pageable pageable, Long id);
     Page<Recipe> findByAffiliateId(Long affiliateId,Pageable pageable);
     List<Recipe> findByUserId(Long userId);
     List<Recipe> findByUserIdAndIsPublicTrue(Long userId);

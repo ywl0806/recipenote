@@ -9,10 +9,22 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <h3>매장 관리</h3>
-        <div class="row" th:each="store : ${list}">
-            <span th:text="*{store.name}"></span>
+        <div class="row row-cols-1">
+            <div class="col">
+                <h3 th:text="#{affiliates.manage-store}">매장 관리</h3>
+            </div>
+            <div class="col mt-2">
+                <ul class="list-group" th:each="store : ${list}">
+                    <li class="list-group-item"><a class="page-link" th:href="@{/store-detail(id=${store.id})}"
+                                                   th:text="*{store.name}"></a></li>
+                </ul>
+            </div>
+            <div class="col mt-2">
+                <a class="btn btn-primary" th:href="@{/create-store}" th:text="#{affiliates.manage-store.new}"></a>
+
+            </div>
         </div>
+
 
     </div>
 </div>

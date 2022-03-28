@@ -12,10 +12,8 @@ import com.example.recipenote.service.utils.SaveImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.*;
 
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -117,7 +115,7 @@ public class RecipeService {
 
     public String saveThumbnailLocal(MultipartFile image) {
 
-        return SaveImage.saveThumbnail(image, "/thumbnails", 400, 400);
+        return SaveImage.saveThumbnail(image, "/thumbnails", 300, 300);
     }
 
     public String saveImageLocal(MultipartFile image) throws IOException {
@@ -148,5 +146,15 @@ public class RecipeService {
     public Page<Recipe> searchRecipe(String keyword,Pageable pageable) {
 
         return recipeRepository.findByKeyword(keyword, pageable);
+    }
+
+    public List<Recipe> getStoresRecipes(Sort sort, int page , Long storeId) {
+
+        Pageable pageable = PageRequest.of(page, 4, sort);
+        List<Recipe> recipes = recipeRepository.findByStoreIdAndIsPublicTrue(pageable, storeId).getContent();
+        if (recipes.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return recipes;
     }
 }

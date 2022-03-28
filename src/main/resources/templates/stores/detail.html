@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="row" style="float: none; margin:0 auto;">
+            <div class="col" style="float: none; margin:0 auto;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 th:text="${store.name}"></h3>
+                    </div>
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0"><h4 th:text="${store.description}"></h4>
+                            <iframe th:if="${store.placeId != null}"
+                                    width="450"
+                                    height="250"
+                                    frameborder="0"
+                                    style="border:0"
+                                    th:src="|https://www.google.com/maps/embed/v1/place?key=${@environment.getProperty('googlemap.key')}&q=place_id:${store.placeId}|"
+                                    allowfullscreen></iframe>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

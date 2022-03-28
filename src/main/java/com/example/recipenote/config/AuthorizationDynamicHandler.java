@@ -33,6 +33,9 @@ public class AuthorizationDynamicHandler {
         return Objects.equals(user.getAffiliateId(), affiliateId);
     }
     public boolean checkRecipeDetailPermission(Authentication authentication, HttpServletRequest request) {
+        if (!(authentication.getPrincipal() instanceof UserInf)){
+            return false;
+        }
         Optional<Recipe> recipe = recipeRepository.findById(Long.valueOf(request.getParameter("id")));
         Object principal = authentication.getPrincipal();
         UserInf user = (UserInf) principal;

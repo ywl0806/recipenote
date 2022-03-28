@@ -5,18 +5,64 @@
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
         layout:decorate="~{layouts/layout}">
 <head>
-    <th:block layout:fragment="css">
-        <style>
-        </style>
-    </th:block>
+
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <h1 th:text="#{greetings}">hi</h1>
+        <th:block th:if="${!#maps.isEmpty(map)}">
+            <div class="row store-wrapper" th:each="store : ${map}">
+                <div class="col col-4 store-thumbnail img-box">
+                    <img class="img-thumbnail store-img" th:if="*{store.getKey().logoUrl != null && store.getKey().logoUrl != ''}"
+                         th:src="*{store.getKey().logoUrl}" alt="">
+                    <img class="img-thumbnail store-img" th:if="*{store.getKey().logoUrl == null || store.getKey().logoUrl== ''}"
+                         src="/images/null-store-logo.png" alt="">
+                    <a class="page-link store-link" th:href="@{/store-detail(id=*{store.getKey().id})}" th:text="*{store.getKey().name}"></a>
+                    <div class="badge text-wrap font-monospace text-muted" th:text="*{store.getKey().description}"></div>
+
+                </div>
+                <div class="col-8 map-wrapper">
+                    <div id="map" class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"
+                                th:if="*{store.getKey().placeId != null}"
+                                style="border:0"
+                                th:src="|https://www.google.com/maps/embed/v1/place?key=${@environment.getProperty('googlemap.key')}&q=place_id:*{store.getKey().placeId}|"
+                                allowfullscreen></iframe>
+                    </div>
+                </div>
+                <th:block th:if="*{!store.getValue().isEmpty()}">
+                    <div class="col col-sm-12">
+                        <div class="row recipes">
+                                <div class="col col-3 recipe-item-wrapper "
+                                     th:each="recipe : *{store.getValue()}">
+                                    <div class="recipe-item">
+                                        <div class="img-box">
+                                            <a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">
+                                                <img th:if="*{recipe.thumbnailPath != null}"
+                                                     th:src="*{recipe.thumbnailPath}"
+                                                     class="img-thumbnail store-recipe-img"/>
+                                                <img th:if="*{recipe.thumbnailPath == null}"
+                                                     th:src="@{/images/nullThumbnailRecipe.png}"
+                                                     class="img-thumbnail store-recipe-img"/> </a>
+                                        </div>
+                                        <div class="recipe-title" th:text="*{recipe.name}">
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
     </div>
-
-
+    <nav th:if="${totalPage != null}" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPage -1)}">
+                <a class="page-link" th:href="@{/(page=${pageStat.index})}"
+                   th:text="${pageStat.index + 1}"></a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

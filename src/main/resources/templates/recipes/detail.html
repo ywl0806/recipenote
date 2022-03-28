@@ -6,16 +6,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block layout:fragment="css">
+        <style>
+        </style>
+    </th:block>
+
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
         <div class="row">
-            <div class="card"><h3 th:text="${recipe.name}" class="card-title"></h3>
-                <img class="card-img img-sm" th:src="${recipe.thumbnailPath}"></div>
-            <div class="col table-responsive">
+            <div class="col-md-3 card-wrapper">
+                <div class="card">
+                    <img class="card-img img-sm mx-auto" th:if="${recipe.thumbnailPath != null}"
+                         th:src="${recipe.thumbnailPath}">
+                    <img class="card-img img-sm mx-auto" th:if="${recipe.thumbnailPath == null}"
+                         th:src="@{/images/nullThumbnailRecipe.png}">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <span th:text="${recipe.name}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col table-responsive ">
                 <table class="table table-sm">
-                    <thead class="thead-dark">
+                    <thead>
                     <tr>
                         <th scope="col">名</th>
                         <th scope="col">量(g)</th>
@@ -27,21 +43,24 @@
                     <tr th:each="ingredient : ${list}">
                         <td th:text="${ingredient.getIngredient().name}"></td>
                         <td th:text="${ingredient.amount}"></td>
-                        <td class="price" th:text="${T(Math).round(ingredient.amount*ingredient.getIngredient().price*1000)}/1000"></td>
+                        <td class="price"
+                            th:text="${T(Math).round(ingredient.amount*ingredient.getIngredient().price*1000)}/1000"></td>
                     </tr>
                     </tbody>
                     <tfoot>
-                    <tr class="table-info">
+                    <tr>
                         <td colspan="2">Total</td>
-                        <td> <span id="total_price"></span><span>  円</span></td>
+                        <td><span id="total_price"></span><span>  円</span></td>
                     </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-        <div id="description">
+        <div class="row row-cols-1">
+            <div id="description">
+            </div>
         </div>
-        <div id="readOnly"></div>
+        <div class="row" id="readOnly"></div>
     </div>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -49,7 +68,7 @@
         document.getElementById('description').innerHTML = str;
         var total = 0;
         var price = document.querySelectorAll(".price");
-        for (var p of price){
+        for (var p of price) {
             total += parseFloat(p.textContent);
 
         }

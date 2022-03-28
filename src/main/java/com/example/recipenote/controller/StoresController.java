@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
@@ -26,9 +27,8 @@ public class StoresController {
     }
 
     @GetMapping("/create-store")
-    public String create(Model model,Authentication authentication) {
+    public String create(Model model, Authentication authentication) {
         Store store = new Store();
-        System.out.println(authentication.getAuthorities());
         model.addAttribute("store", store);
         return "stores/new";
     }
@@ -36,7 +36,15 @@ public class StoresController {
     @PostMapping("/new-store")
     public String newStore(@ModelAttribute("store") Store store, Authentication authentication) {
         UserInf user = (UserInf) authentication.getPrincipal();
-        storeService.newStore(store,user.getUsername());
+        storeService.newStore(store, user.getUsername());
         return "redirect:/";
+    }
+
+    @GetMapping("/store-detail")
+    public String storeDetail(@RequestParam(name = "id") Long id, Model model) {
+        Store store = storeService.getStore(id);
+
+        model.addAttribute("store",store);
+        return "stores/detail";
     }
 }

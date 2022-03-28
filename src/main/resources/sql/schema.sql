@@ -87,6 +87,8 @@ create table store
     description  varchar(255),
     latitude     float8,
     longitude    float8,
+    place_id     varchar(255),
+    logo_url     varchar(255),
     name         varchar(255) not null,
     primary key (id)
 );

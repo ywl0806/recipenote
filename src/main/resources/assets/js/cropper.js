@@ -62,8 +62,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
         if (cropper) {
             canvas = cropper.getCroppedCanvas({
-                width: 400,
-                height: 400,
+                width: 300,
+                height: 300,
             });
             initialAvatarURL = avatar.src;
             avatar.src = canvas.toDataURL();
