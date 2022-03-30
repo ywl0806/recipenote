@@ -10190,6 +10190,7 @@ header .navbar .search-item {
 .card-wrapper {
   padding: 10px;
   margin-bottom: 5px;
+  max-width: 13em;
 }
 .card-wrapper .card {
   padding: 4px;

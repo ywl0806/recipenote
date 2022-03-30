@@ -10,6 +10,9 @@
             .ck-editor__editable {
                 min-height: 700px;
             }
+            .input-control{
+                width: 10em;
+            }
         </style>
     </th:block>
     <meta charset="UTF-8">
@@ -21,7 +24,7 @@
         <form class="recipe-form alert-none" th:action="@{/create-recipe}" th:object="${form}" method="post"
               enctype="multipart/form-data">
             <div class="row">
-                <div class="col-auto">
+                <div class="col">
                     <label class="label image-wrapper" data-toggle="tooltip" title="Thumbnail Image">
                         <img class="rounded profile-pic" id="avatar" th:src="@{/images/nullThumbnailRecipe.png}"
                              alt="avatar">
@@ -55,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-auto ingredient-container overflow-auto alert-none" id="in-container">
+                <div class="col-auto ingredient-container overflow-auto alert-none" id="in-container">
                     <h4>材料</h4>
                     <table class="table overflow-auto table-sm">
                         <thead>
@@ -68,12 +71,20 @@
                         </thead>
                         <tbody class="overflow-auto">
                         <tr th:each="ingredient, item : *{ingredients}">
-                            <th scope="col"><span th:text="${item.index}+1"></span></th>
-                            <td><input class="form-control-sm add-ingredient" type="text" th:id="name_+${item.index}"
-                                       readonly="readonly"></td>
-                            <td><input class="form-control-sm amount" th:id="amount_+${item.index}" type="text"
-                                       th:field="*{ingredients[__${item.index}__].amount}"></td>
-                            <td><span th:id="total_+${item.index}"></span><span>　円</span></td>
+                            <th scope="col">
+                                <span th:text="${item.index}+1"></span>
+                            </th>
+                            <td>
+                                <input class="form-control-sm add-ingredient input-control" type="text" th:id="name_+${item.index}"
+                                       readonly="readonly">
+                            </td>
+                            <td>
+                                <input class="form-control-sm amount input-control" th:id="amount_+${item.index}" type="number"
+                                       th:field="*{ingredients[__${item.index}__].amount}">
+                            </td>
+                            <td>
+                                <span th:id="total_+${item.index}"></span><span>　円</span>
+                            </td>
                             <input type="hidden" th:id="price_+${item.index}" value="0">
                             <input type="hidden" th:id="id_+${item.index}"
                                    th:field="*{ingredients[__${item.index}__].ingredientId}">

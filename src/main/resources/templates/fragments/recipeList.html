@@ -13,9 +13,9 @@
 <body>
 <div class="recipe-index-wrapper" th:fragment="recipeList">
 
-    <div class="container">
-        <h2>Recipe List</h2>
-        <div class="row">
+    <div class="container text-center">
+        <h2 class="font-weight-bold mb-3">Recipe List</h2>
+        <div class="row justify-content-center">
             <div class="col-md-3 card-wrapper" th:each="recipe : ${list}">
                 <div class="card">
                     <a href="/recipe-detail" th:href="@{/recipe-detail(id=${recipe.id})}">

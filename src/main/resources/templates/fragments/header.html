@@ -22,11 +22,14 @@
         </button>
         <div class="collapse navbar-collapse justify-content-start" id="navbarSupportedContent">
             <ul class="navbar-nav justify-content-start">
+                <th:block sec:authorize="!isAuthenticated()">
+                    <li class="nav-item" style="width: 13em"></li>
+                </th:block>
                 <th:block sec:authorize="isAuthenticated()">
                     <li class="nav-item"><a class="nav-link" th:href="@{/recipes}" th:text="#{header.recipes}">RECIPES</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/new-recipe}" th:text="#{header.create-recipe}">CREATE-RECIPE</a></li>
                     <li class="nav-item" sec:authorize="!hasRole('ROLE_USER')">
-                        <a class="nav-link" th:href="@{/create-affiliate}">CREATE-COMPANY</a>
+                        <a class="nav-link" th:href="@{/create-affiliate}" th:text="#{header.create-affiliate}">CREATE-COMPANY</a>
                     </li>
                 </th:block>
             </ul>

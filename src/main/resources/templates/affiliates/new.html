@@ -12,16 +12,16 @@
     <div class="container form-container">
         <div class="row">
             <div class="col-md-6 form_area">
-            <h1>CREATE COMPANY</h1>
-            <form th:object="${affiliate}" th:action="@{new-affiliate}" method="post">
+            <h1 th:text="#{header.create-affiliate}" >CREATE COMPANY</h1>
+            <form th:object="${affiliate}" th:action="@{new-affiliate}"  method="post">
                 <div class="form-group">
-                    <input class="form-control" type="text" id="name" th:field="*{name}" placeholder="Company Name">
+                    <input class="form-control" type="text" id="name" th:field="*{name}" placeholder="Company Name" th:placeholder="#{affiliates.new.companyName}">
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="description" th:field="*{description}" placeholder="簡単に会社を紹介してください。">
+                    <input class="form-control" type="text" id="description" th:field="*{description}" th:placeholder="#{affiliates.new.introduce}" placeholder="簡単に会社を紹介してください。">
                 </div>
                 <div class="form-group">
-                    <input class="btnSubmit" type="submit" value="Go to Create Store ->">
+                    <input class="btnSubmit" type="submit" value="Go to Create Store ->" th:value="#{regist}">
                 </div>
             </form>
         </div>
