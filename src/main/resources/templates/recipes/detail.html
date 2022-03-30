@@ -43,8 +43,8 @@
                     <tr th:each="ingredient : ${list}">
                         <td th:text="${ingredient.getIngredient().name}"></td>
                         <td th:text="${ingredient.amount}"></td>
-                        <td class="price"
-                            th:text="${T(Math).round(ingredient.amount*ingredient.getIngredient().price*1000)}/1000"></td>
+                        <td class="price" th:if="${ingredient.amount != null}"
+                            th:text="${T(Math).round(ingredient.amount*ingredient.getIngredient().price*1000)}/1000">0</td>
                     </tr>
                     </tbody>
                     <tfoot>
