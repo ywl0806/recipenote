@@ -62,7 +62,6 @@ public class HomeController {
             map.put(store, recipes);
         }
 
-        logger.info(map.toString());
 
         model.addAttribute("totalPage", stores.getTotalPages());
         model.addAttribute("map", map);
