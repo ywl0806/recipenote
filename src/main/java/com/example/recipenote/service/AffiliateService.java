@@ -88,4 +88,10 @@ public class AffiliateService {
 
         userRepository.save(user.orElseThrow());
     }
+
+    public String getName(Long affiliateId) {
+        Affiliate affiliate = affiliateRepository.findById(affiliateId).orElseThrow();
+
+        return affiliate.getName();
+    }
 }

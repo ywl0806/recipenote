@@ -3,6 +3,7 @@ package com.example.recipenote.service;
 import com.example.recipenote.entity.Role;
 import com.example.recipenote.entity.SocialUser;
 import com.example.recipenote.entity.User;
+import com.example.recipenote.repository.AffiliateRepository;
 import com.example.recipenote.repository.RoleRepository;
 import com.example.recipenote.repository.UserRepository;
 import org.slf4j.Logger;
@@ -16,11 +17,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpSession;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -36,10 +35,8 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
     @Autowired
     private final RoleRepository roleRepository;
 
-
     public CustomOidcUserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-
         this.roleRepository = roleRepository;
     }
 

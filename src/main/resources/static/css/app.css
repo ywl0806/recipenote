@@ -10276,3 +10276,17 @@ header .navbar .search-item {
   word-break: break-all;
   text-overflow: ellipsis;
 }
+
+.social-login {
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.social-login span {
+  margin-left: 3px;
+}
+
+.line-login {
+  background: #06C755;
+  color: #FFFFFF;
+}

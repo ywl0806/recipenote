@@ -45,14 +45,6 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model, Authentication authentication, @RequestParam(defaultValue = "0", name = "page", required = false)  int page) {
 
-        if (authentication !=null) {
-            UserInf user = (UserInf) authentication.getPrincipal();
-            if (user.getAffiliateId() != null) {
-                model.addAttribute("affiliateId", user.getAffiliateId());
-                return "redirect:/affiliate/" + user.getAffiliateId();
-            }
-        }
-
         Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
         Map<Store, List<Recipe>>map = new HashMap<>();
         Page<Store> stores = storeService.getStores(sort, page);

@@ -10,4 +10,6 @@ public interface UserInf {
     String getName();
 
     String getAvatarUrl();
+
+    Affiliate getAffiliate();
 }

@@ -12,24 +12,27 @@
         <div class="row">
             <div class="col-md-6 form_area">
                 <main>
-                    <h3>Sign in</h3>
+                    <h3 th:text="#{header.join}">Sign in</h3>
                     <form th:action="@{/join}" th:object="${form}" method="post">
                         <div class="form-group">
-                            <input class="form-control" placeholder="Name"  type="text" th:field="*{name}" id="user_name">
+                            <input class="form-control" placeholder="Name"  type="text" th:field="*{name}" th:placeholder="#{users.join.name}" id="user_name">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" placeholder="Email"  type="email" th:field="*{email}" id="user_email">
+                            <input class="form-control" placeholder="Email"  type="email" th:field="*{email}" th:placeholder="#{users.join.email}" id="user_email">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" placeholder="Password"  type="password" th:field="*{password}" id="user_password">
+                            <input class="form-control" placeholder="Password"  type="password" th:field="*{password}" th:placeholder="#{users.join.password}" id="user_password">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" placeholder="Password Confirmation"  type="password" th:field="*{passwordConfirmation}" id="user_passwordConfirmation">
+                            <input class="form-control" placeholder="Password Confirmation"  type="password" th:field="*{passwordConfirmation}" th:placeholder="#{users.join.passwordConfirmation}" id="user_passwordConfirmation">
                         </div>
                         <div class="form-group">
-                            <input class="btnSubmit" type="submit" value="submit">
+                            <input class="btnSubmit" type="submit" th:value="#{regist}" value="submit">
                         </div>
                     </form>
+                    <a class="btn btn-sm btn-secondary social-login line-login" th:href="@{/oauth2/authorization/line}">
+                        <i class="fab fa-line fa-inverse fa-2xl"></i><span th:text="#{lineLogin}"></span>
+                    </a>
                 </main>
             </div>
         </div>

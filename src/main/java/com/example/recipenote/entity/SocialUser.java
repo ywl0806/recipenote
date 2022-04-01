@@ -21,6 +21,12 @@ public class SocialUser implements OidcUser, OAuth2User, UserInf {
 
     private Long userId = null;
 
+    private Affiliate affiliate;
+
+    @Override
+    public Affiliate getAffiliate() {
+        return this.affiliate;
+    }
 
     private SocialUser(Collection<? extends GrantedAuthority> authorities, OidcIdToken idToken) {
         this.oauth2User = new DefaultOidcUser(authorities, idToken);
