@@ -60,7 +60,7 @@ create table recipe
     created_at     timestamp,
     updated_at     timestamp,
     affiliate_id   int8,
-    content        varchar(1000) not null,
+    content        text not null,
     is_public      boolean       not null,
     name           varchar(255)  not null,
     store_id       int8,
