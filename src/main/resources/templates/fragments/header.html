@@ -32,7 +32,7 @@
                         <a class="nav-link" th:href="@{/create-affiliate}" th:text="#{header.create-affiliate}">CREATE-COMPANY</a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                        <a class="nav-link" th:href="@{'/affiliate/'+ ${#authentication.principal.getAffiliate().getId()}}" th:text="${#authentication.principal.getAffiliate().getName()}">CREATE-COMPANY</a>
+                        <a class="nav-link" th:if="${#authentication.principal.getAffiliate() != null}" th:href="@{'/affiliate/'+ ${#authentication.principal.getAffiliate().getId()}}" th:text="${#authentication.principal.getAffiliate().getName()}">CREATE-COMPANY</a>
                     </li>
                 </th:block>
             </ul>

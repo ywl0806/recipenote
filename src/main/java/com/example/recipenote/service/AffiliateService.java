@@ -1,5 +1,6 @@
 package com.example.recipenote.service;
 
+import com.example.recipenote.controller.AffiliateController;
 import com.example.recipenote.entity.Affiliate;
 import com.example.recipenote.entity.Role;
 import com.example.recipenote.entity.User;
@@ -8,19 +9,28 @@ import com.example.recipenote.form.UserForm;
 import com.example.recipenote.repository.AffiliateRepository;
 import com.example.recipenote.repository.RoleRepository;
 import com.example.recipenote.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Service
 public class AffiliateService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AffiliateService.class);
+
     @Autowired
     private final AffiliateRepository affiliateRepository;
     @Autowired
@@ -34,19 +44,22 @@ public class AffiliateService {
         this.roleRepository = roleRepository;
     }
 
-    public void createAffiliate(Affiliate affiliate, String username) {
+    public void createAffiliate(Affiliate affiliate, String username, HttpServletRequest request) {
         User user = userRepository.findByUsername(username);
         affiliate = affiliateRepository.save(affiliate);
 //        ユーザーにroleを追加
+        user.setAffiliate(affiliate);
         user.setAffiliateId(affiliate.getId());
         Role roleManager = roleRepository.findByName("ROLE_MANAGER");
         Role roleUser = roleRepository.findByName("ROLE_USER");
         user.addRole(roleManager);
         user.addRole(roleUser);
-        userRepository.save(user);
+        user = userRepository.saveAndFlush(user);
 //       認証をリロードする
+        logger.info("security context updated to {}",user);
         Authentication reAuth = new UsernamePasswordAuthenticationToken(user,user.getPassword(),user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(reAuth);
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(reAuth);
     }
 
     public List<UserForm> getUserList(Long id) {

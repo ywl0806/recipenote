@@ -25,7 +25,7 @@ spring:
             user-info-authentication-method: query
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
     properties:
@@ -41,7 +41,7 @@ spring:
     password: password
   sql:
     init:
-      mode: never
+      mode: embedded
 
 server:
   servlet:

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -52,10 +53,10 @@ public class AffiliateController {
     }
 
     @PostMapping("/new-affiliate")
-    public String newAffiliate(Model model, @ModelAttribute("affiliate") Affiliate affiliate, Authentication authentication) {
+    public String newAffiliate(Model model, @ModelAttribute("affiliate") Affiliate affiliate, Authentication authentication, HttpServletRequest request) {
         UserInf user = (UserInf) authentication.getPrincipal();
         logger.info("userInf : " + user.toString());
-        affiliateService.createAffiliate(affiliate, user.getUsername());
+        affiliateService.createAffiliate(affiliate, user.getUsername(), request);
 
         return "redirect:/create-store";
     }
