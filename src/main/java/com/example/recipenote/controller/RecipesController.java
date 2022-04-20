@@ -10,6 +10,7 @@ import com.example.recipenote.service.AwsS3Service;
 import com.example.recipenote.service.IngredientService;
 import com.example.recipenote.service.RecipeService;
 import com.example.recipenote.service.StoreService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,12 +27,14 @@ import org.springframework.web.multipart.MultipartRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
 @Controller
+@Slf4j
 public class RecipesController {
 
     @Autowired
@@ -108,7 +111,6 @@ public class RecipesController {
         if (form.getIsPublic() == null) {
             form.setIsPublic(true);
         }
-        System.out.println(form.getIngredients());
         recipeService.newRecipe(form);
         return "redirect:/recipes";
     }
@@ -155,6 +157,30 @@ public class RecipesController {
 
         model.addAttribute("totalPage", pageList.getTotalPages());
         model.addAttribute("list", pageList.getContent());
-        return  "recipes/index";
+        return "recipes/index";
     }
+
+    @GetMapping("/remove-recipe")
+    public String removeRecipe(Model model, Authentication authentication, @RequestParam Long id) {
+        UserInf user = (UserInf) authentication.getPrincipal();
+        ArrayList<String> messages = new ArrayList<>();
+        log.info("recipe id: {}", id);
+        try {
+            recipeService.removeRecipe(id, user.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            messages.add(e.getMessage());
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("messages", messages);
+            return "pages/denied-page";
+        }
+
+        messages.add("remove success!");
+        model.addAttribute("hasMessage", true);
+        model.addAttribute("class", "alert-success");
+        model.addAttribute("messages", messages);
+        return "pages/denied-page";
+    }
+
 }

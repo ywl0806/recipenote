@@ -74,6 +74,7 @@ public class RecipeService {
         Recipe entity = recipeRepository.getById(id);
         return RecipeForm.builder()
                 .id(id)
+                .userId(entity.getUserId())
                 .name(entity.getName())
                 .content(entity.getContent())
                 .isPublic(entity.getIsPublic())
@@ -84,8 +85,6 @@ public class RecipeService {
     //      公開されたrecipe
     public Page<Recipe> getAllPublicRecipeList(Pageable pageable) {
         Page<Recipe> page = recipeRepository.findByIsPublicTrue(pageable);
-
-
         return page;
     }
 
@@ -156,5 +155,15 @@ public class RecipeService {
             return new ArrayList<>();
         }
         return recipes;
+    }
+
+    public void removeRecipe(Long recipeId, Long userId) throws Exception {
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow();
+        if (Objects.equals(recipe.getUserId(), userId)) {
+            recipeRepository.delete(recipe);
+        } else {
+            throw new Exception("Not the owner of the recipe");
+        }
+
     }
 }
