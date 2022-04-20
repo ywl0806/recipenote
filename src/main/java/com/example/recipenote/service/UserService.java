@@ -46,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public void join(UserForm userForm){
+    public Long join(UserForm userForm){
         String name = userForm.getName();
         String email = userForm.getEmail();
         String password = userForm.getPassword();
@@ -55,7 +55,8 @@ public class UserService {
         newUser.setAvatarUrl("/images/default-user-image.png");
         Role role = roleRepository.findByName("ROLE_GUEST");
         newUser.addRole(role);
-        userRepository.save(newUser);
+        newUser = userRepository.save(newUser);
+        return newUser.getUserId();
     }
 
     public UserForm getMe(Long id){

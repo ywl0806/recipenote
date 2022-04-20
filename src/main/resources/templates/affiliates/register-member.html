@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container form-container">
+        <div class="row">
+            <div class="col-md-6 form_area">
+                <main>
+                    <form th:action="@{/register-member}" th:object="${user}" method="post">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Name" type="text" th:field="*{name}"
+                                   th:placeholder="#{users.join.name}" id="user_name">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Email" type="email" th:field="*{email}"
+                                   th:placeholder="#{users.join.email}" id="user_email">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password" type="password" th:field="*{password}"
+                                   th:placeholder="#{users.join.password}" id="user_password">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password Confirmation" type="password"
+                                   th:field="*{passwordConfirmation}"
+                                   th:placeholder="#{users.join.passwordConfirmation}" id="user_passwordConfirmation">
+                        </div>
+                        <input type="hidden" th:value="${user.affiliateId}" th:field="*{affiliateId}">
+                        <div class="form-group">
+                            <input class="btnSubmit" type="submit" th:value="#{regist}" value="submit">
+                        </div>
+                    </form>
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
