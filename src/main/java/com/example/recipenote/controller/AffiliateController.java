@@ -25,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class AffiliateController {
     }
 
     @PostMapping("/register-member")
-    public String postRegisterMember(Model model, @Validated @ModelAttribute("user") UserForm userForm, BindingResult result, Locale locale) {
+    public String postRegisterMember(Model model ,RedirectAttributes attributes, @Validated @ModelAttribute("user") UserForm userForm, BindingResult result, Locale locale) {
 
         ArrayList<String> errorMessages = new ArrayList<>();
 
@@ -168,8 +169,9 @@ public class AffiliateController {
             model.addAttribute("hasMessage", true);
             model.addAttribute("class", "alert-danger");
             model.addAttribute("messages", errorMessages);
-            model.addAttribute("form", userForm);
-            return "redirect:/register-member";
+            model.addAttribute("redirectUrl","/register-member");
+
+            return "pages/error-page";
         }
         Long userId = userService.join(userForm);
         affiliateService.addMember(userForm.getAffiliateId(),userId);

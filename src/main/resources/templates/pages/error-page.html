@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        layout:decorate="~{layouts/layout}">
+<head>
+  <th:block layout:fragment="css">
+    <style>
+    </style>
+  </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container">
+  </div>
+  <script th:inline="javascript">
+        //alert でmessageを表示してhomeに移動
+        window.onload = function () {
+            /*<![CDATA[*/
+            var msg = [[${messages}]];
+            alert(msg);
+            location.href = [[@{${redirectUrl}}]];
+            /*]]>*/
+        }
+
+    </script>
+</div>
+</body>
+</html>
